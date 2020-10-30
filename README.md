@@ -35,7 +35,7 @@ It's a text based interface.  Options for describing the moves are:
    There are potentially two locations in the tableau where the a card can go, for example the 3 Hearts can go on the 4 Clubs or 4 Spades
    So you would (optionally) want to be able to specify the second location for the move 
 
-     e.g.  3H        > T2 or TT
+        e.g.  3H        > T2 or TT
 
    There should have to be some smartness to make this work natually, so when you are moving cards between stacks it always chooses the other stack (rather than you have to explicitly say T1 or T2)
    This smartness would also mean you could always avoid using the T2 command by just applying the move twice if it went to the wrong place
@@ -47,19 +47,21 @@ It's a text based interface.  Options for describing the moves are:
 
    But then moving an Ace into the foundation, or a king onto the tableau becomes unnatural.
 
-So thne second option looks the best.
+So the second option looks the best.
 
 
-A move is then
-      <Rank><Suit><Location>
+The operations on the text based interface are then described like this:
+ 
+      <Operation> ::= <Action> | <Move>
 
-	  <Suit>     = C,D,H,S
-	  <Rank>     = A,2,3,4,5,6,7,8,9,10,J,Q,K
-	  <Location> = F(oundation) or T(ableau) or  or TT (Tableau location 2)
+	  <Action>    ::= U (Undo), R (Redo), D (Deal)
 
-or Undo (U)
-or Redo (R)
-or Deal (D)   
+	  <Move>      ::= <Rank><Suit><Location>
+
+	  <Suit>      ::= C,D,H,S
+	  <Rank>      ::= A,2,3,4,5,6,7,8,9,10,J,Q,K
+	  <Location>  ::= F(oundation) or T(ableau) or TT (Tableau location 2)
+
 
 
 ctor Klondike (InternalLayout)
