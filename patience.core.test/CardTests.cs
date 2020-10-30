@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace patience.core.test
 {
     [TestFixture]
-    public class DisplayTest
+    public class CardTests
     {
         [Test]
         public void TheUnicodeCharacters_ForTheCardSuits_ShouldDisplayInResharperTestRunner()
