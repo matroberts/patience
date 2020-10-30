@@ -18,19 +18,25 @@ Definitions:
 It's a text based interface.  Options for describing the moves are:
 
 1. You could try to name where you are moving the card from and too  
+
          e.g. W(aste)    > T(ableau)5
               T(ableau)5 > F(oundation)
+
    but moving stacks around the Tableau is difficult to describe
 
 2. Instead you could name the card you are moving, and where you are moving it too
+
          e.g. 3H        > F(oundation)
 		      3H        > T(ableau)
+
    This way it doesn't matter where the card currently is (Waste, Foundation or Tableau) only that it is visible.
    It allows you to describe moving stacks in the tableau in a simple way.
    
    There are potentially two locations in the tableau where the a card can go, for example the 3 Hearts can go on the 4 Clubs or 4 Spades
    So you would (optionally) want to be able to specify the second location for the move 
+
      e.g.  3H        > T2 or TT
+
    There should have to be some smartness to make this work natually, so when you are moving cards between stacks it always chooses the other stack (rather than you have to explicitly say T1 or T2)
    This smartness would also mean you could always avoid using the T2 command by just applying the move twice if it went to the wrong place
 	
