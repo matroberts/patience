@@ -12,7 +12,10 @@ namespace patience.core
     public class Stock
     {
         public List<Card> Cards { get; set; } = new List<Card>();
-        public int Position { get; set; } = 0; // 1-indexed !!
+        /// <summary>
+        /// Stock position is 1-indexed.  A zero indicates that no cards have been flipped yet.
+        /// </summary>
+        public int Position { get; set; } = 0;
     }
 
 
@@ -20,7 +23,9 @@ namespace patience.core
     {
         public static ApiLayout ToApiLayout(this Layout layout)
         {
-            return new ApiLayout(){ Stock = layout.Stock.Cards.Where((c,i) => i+3 == layout.Stock.Position || i+2 == layout.Stock.Position || i+1 == layout.Stock.Position).Select(c => c.ToString()).ToList()};
+            return new ApiLayout(){ Stock = layout.Stock.ToApiStock()};
         }
+
+        public static List<string> ToApiStock(this Stock stock) => stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()).ToList();
     }
 }

@@ -11,11 +11,11 @@
 
         public ApiResult Operate(string operation)
         {
-            // parse the operation 
+            // parse the operation - turn this into a parsed action
 
-            // validation the operation
+            // validation the operation - actually makes a move to apply to the layout
 
-            // do the operation
+            // do the operation - do the move to the layout
 
             return new ApiResult()
             {

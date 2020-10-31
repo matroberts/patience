@@ -89,9 +89,21 @@ namespace patience.core.test
             Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
         }
 
-        // What about when no cards in stock - what should position be then?.....does it matter?
+        [Test]
+        public void Print_Stock_ShouldShow0Card_IfTheStockIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = {  }, Position = 0 } // 1-indexed !!
+            };
 
-        // How do you indicate that no cards are visible...i.e. all in the stock with none in the waste
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("P");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
+        }
+
 
         #endregion
     }
