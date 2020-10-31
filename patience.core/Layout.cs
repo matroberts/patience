@@ -2,7 +2,7 @@
 
 namespace patience.core
 {
-    public class InternalLayout
+    public class Layout
     {
         public Stock Stock { get; set; } = new Stock();
     }

@@ -2,11 +2,11 @@
 {
     public class Klondike : IKlondike
     {
-        private readonly InternalLayout internalLayout;
+        private readonly Layout layout;
 
-        public Klondike(InternalLayout internalLayout)
+        public Klondike(Layout layout)
         {
-            this.internalLayout = internalLayout;
+            this.layout = layout;
         }
 
         public ApiResult Operate(string operation)
