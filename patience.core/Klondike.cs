@@ -17,7 +17,6 @@
 
             // do the operation
 
-            // map Layout to ApiLayout
             return new ApiResult()
             {
                 Status = ApiStatus.Ok,
