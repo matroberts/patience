@@ -16,7 +16,7 @@ namespace patience.core.test
             var klondike = new Klondike(internalLayout);
             var result = klondike.Operate("P");
 
-            Assert.That(result.Status, Is.EqualTo(Status.Ok));
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
            // Assert.That(result.Layout, Is.EqualTo());
 
         }

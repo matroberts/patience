@@ -1,6 +1,6 @@
 ﻿namespace patience.core
 {
-    public class Klondike
+    public class Klondike : IKlondike
     {
         private readonly InternalLayout internalLayout;
 
@@ -9,7 +9,7 @@
             this.internalLayout = internalLayout;
         }
 
-        public Result Operate(string operation)
+        public ApiResult Operate(string operation)
         {
             // parse the operation 
 
@@ -18,7 +18,7 @@
             // do the operation
 
             // map internal layout to layout
-            return new Result(){Status = Status.Ok};
+            return new ApiResult(){Status = ApiStatus.Ok};
         }
     }
 }

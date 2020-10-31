@@ -1,6 +1,6 @@
 ﻿namespace patience.core
 {
-    public class Layout
+    public class ApiLayout
     {
         
     }
