@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\patience.core.abstractions\patience.core.abstractions.csproj" />
-  </ItemGroup>
-
 </Project>
