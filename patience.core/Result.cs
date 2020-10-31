@@ -4,9 +4,9 @@
     {
         Ok
     }
-    public class ValidationResult<T>
+    public class Result
     {
-        public T Data { get; set; }
+        public Layout Layout { get; set; }
         public Status Status { get; set; }
         public string ErrorMessage { get; set; }
     }

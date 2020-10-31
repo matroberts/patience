@@ -54,7 +54,7 @@ The operations on the text based interface are then described like this:
  
       <Operation> ::= <Action> | <Move>
 
-	  <Action>    ::= U (Undo), R (Redo), D (Deal)
+	  <Action>    ::= U (Undo), R (Redo), D (Deal), P (Print)
 
 	  <Move>      ::= <Rank><Suit><Location>
 

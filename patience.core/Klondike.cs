@@ -9,16 +9,16 @@
             this.internalLayout = internalLayout;
         }
 
-        public ValidationResult<Layout> Operate(string operation)
+        public Result Operate(string operation)
         {
-            // parse the operation
+            // parse the operation 
 
             // validation the operation
 
             // do the operation
 
             // map internal layout to layout
-            return null;
+            return new Result(){Status = Status.Ok};
         }
     }
 }
