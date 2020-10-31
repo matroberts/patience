@@ -63,13 +63,38 @@ The operations on the text based interface are then described like this:
 	  <Location>  ::= F(oundation) or T(ableau) or TT (Tableau location 2)
 
 
+## Data Structures
 
-ctor Klondike (InternalLayout)
-Layout Klondike(string move);
+It seems like I need to representations of the card layout.  An internal representation where the layout of all the cards is known, and an external representation where the location of the unseen cards is hidden.
 
-InternalLayout {
-	Foundation: [[], [], [], []]
-	Tableau: [[], [], [], [].....]
-	Stock: []
-	Talon: []
-}
+	InternalLayout : {
+		Foundation : [
+			FoundationStack : [],
+			FoundationStack : [],
+			FoundationStack : [],
+			FoundationStack : [],
+		]
+		Tableau : [
+			TableauStack : {
+				[], 
+				HiddenCount
+			},
+			.....
+		]
+		Stock : {       <- so the stock and waste piles are combined into a single structure, with a count to show you where you are 
+			[],
+			Count
+		}
+	}
+
+	Layout : {
+		Foundation : [,,,]
+		Tableau: [
+			[]         <- need to have a "face down", type of card
+		]
+		Stock : {
+			MoreCards: bool
+			TopThree: [,,,]
+		}
+	}
+
