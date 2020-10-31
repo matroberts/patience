@@ -27,22 +27,22 @@ namespace patience.core.test
 
         #region ToString
 
-        [TestCase(Suit.Diamonds, 2, "2\u2662")]
-        [TestCase(Suit.Hearts, 2, "2\u2661")]
-        [TestCase(Suit.Spades, 2, "2\u2660")]
-        [TestCase(Suit.Clubs, 1, "A\u2663")]
-        [TestCase(Suit.Clubs, 2, "2\u2663")]
-        [TestCase(Suit.Clubs, 3, "3\u2663")]
-        [TestCase(Suit.Clubs, 4, "4\u2663")]
-        [TestCase(Suit.Clubs, 5, "5\u2663")]
-        [TestCase(Suit.Clubs, 6, "6\u2663")]
-        [TestCase(Suit.Clubs, 7, "7\u2663")]
-        [TestCase(Suit.Clubs, 8, "8\u2663")]
-        [TestCase(Suit.Clubs, 9, "9\u2663")]
-        [TestCase(Suit.Clubs, 10, "10\u2663")]
-        [TestCase(Suit.Clubs, 11, "J\u2663")]
-        [TestCase(Suit.Clubs, 12, "Q\u2663")]
-        [TestCase(Suit.Clubs, 13, "K\u2663")]
+        [TestCase(Suit.Diamonds, 2, "2D")]
+        [TestCase(Suit.Hearts, 2, "2H")]
+        [TestCase(Suit.Spades, 2, "2S")]
+        [TestCase(Suit.Clubs, 1, "AC")]
+        [TestCase(Suit.Clubs, 2, "2C")]
+        [TestCase(Suit.Clubs, 3, "3C")]
+        [TestCase(Suit.Clubs, 4, "4C")]
+        [TestCase(Suit.Clubs, 5, "5C")]
+        [TestCase(Suit.Clubs, 6, "6C")]
+        [TestCase(Suit.Clubs, 7, "7C")]
+        [TestCase(Suit.Clubs, 8, "8C")]
+        [TestCase(Suit.Clubs, 9, "9C")]
+        [TestCase(Suit.Clubs, 10, "10C")]
+        [TestCase(Suit.Clubs, 11, "JC")]
+        [TestCase(Suit.Clubs, 12, "QC")]
+        [TestCase(Suit.Clubs, 13, "KC")]
         public void CardShouldDisplayCorrectly(Suit suit, int rank, string displayValue)
         {
             var card = new Card(suit, rank);

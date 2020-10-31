@@ -17,8 +17,12 @@
 
             // do the operation
 
-            // map internal layout to layout
-            return new ApiResult(){Status = ApiStatus.Ok};
+            // map Layout to ApiLayout
+            return new ApiResult()
+            {
+                Status = ApiStatus.Ok,
+                Layout = layout.ToApiLayout()
+            };
         }
     }
 }

@@ -65,10 +65,10 @@ namespace patience.core
         {
             var suitChar = Suit switch
             {
-                Suit.Clubs => '\u2663',
-                Suit.Diamonds => '\u2662',
-                Suit.Hearts => '\u2661',
-                Suit.Spades => '\u2660',
+                Suit.Clubs => 'C',
+                Suit.Diamonds => 'D',
+                Suit.Hearts => 'H',
+                Suit.Spades => 'S',
                 _ => throw new ArgumentOutOfRangeException()
             };
             var rankString = Rank switch
