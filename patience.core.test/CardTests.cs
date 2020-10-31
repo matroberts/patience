@@ -25,6 +25,8 @@ namespace patience.core.test
             // Console.ForegroundColor = ConsoleColor.White;
         }
 
+        #region ToString
+
         [TestCase(Suit.Diamonds, 2, "2\u2662")]
         [TestCase(Suit.Hearts, 2, "2\u2661")]
         [TestCase(Suit.Spades, 2, "2\u2660")]
@@ -46,5 +48,74 @@ namespace patience.core.test
             var card = new Card(suit, rank);
             Assert.That(card.ToString(), Is.EqualTo(displayValue));
         }
+
+        #endregion
+
+        #region implicit cast from string
+
+        [Test]
+        public void ImplicitCast_WillThrow_IfTheStringTooShort()
+        {
+            Assert.That(() => { Card card = "A"; }, Throws.ArgumentException.With.Message.EqualTo("String to short in implicit cast to Card"));
+        }
+
+        [Test]
+        public void ImplicitCast_WillThrow_IfTheStringTooLong()
+        {
+            Assert.That(() => { Card card = "999C"; }, Throws.ArgumentException.With.Message.EqualTo("String to long in implicit cast to Card"));
+        }
+
+        [TestCase("2C", Suit.Clubs)]
+        [TestCase("2D", Suit.Diamonds)]
+        [TestCase("2H", Suit.Hearts)]
+        [TestCase("2S", Suit.Spades)]
+        public void ImplicitCast_CorrectlyIdentifies_TheSuit(string str, Suit suit)
+        {
+            Card card = str;
+            Assert.That(card.Suit, Is.EqualTo(suit));
+        }
+
+        [Test]
+        public void ImplicitCast_WillThrow_IfTheSuitCharacterIsNotAllowed()
+        {
+            Assert.That(() => { Card card = "2c"; }, Throws.ArgumentException.With.Message.EqualTo("Suit 'c' is not recognized.  Allowed values are C,D,H,S."));
+        }
+
+        [TestCase("AC", 1)]
+        [TestCase("2C", 2)]
+        [TestCase("3C", 3)]
+        [TestCase("4C", 4)]
+        [TestCase("5C", 5)]
+        [TestCase("6C", 6)]
+        [TestCase("7C", 7)]
+        [TestCase("8C", 8)]
+        [TestCase("9C", 9)]
+        [TestCase("10C", 10)]
+        [TestCase("JC", 11)]
+        [TestCase("QC", 12)]
+        [TestCase("KC", 13)]
+        public void ImplicitCast_CorrectlyIdentifies_TheFourRank(string str, int rank)
+        {
+            Card card = str;
+            Assert.That(card.Rank, Is.EqualTo(rank));
+        }
+
+        [Test]
+        public void ImplicitCast_WillThrow_IfTheRankStringIsNotAllowed()
+        {
+            Assert.That(() => { Card card = "11C"; }, Throws.ArgumentException.With.Message.EqualTo("Rank '11' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K."));
+        }
+
+        [Test]
+        public void Card_HasAnImplicitConversionFromString()
+        {
+            var cards = new List<Card> {"2C", "KD"};
+            foreach (var card in cards)
+            {
+                Console.WriteLine(card);
+            }
+        }
+
+        #endregion
     }
 }
