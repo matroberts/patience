@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "patience.core.test", "patie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "patience.core.abstractions", "patience.core.abstractions\patience.core.abstractions.csproj", "{1DC21D08-E37E-4FB2-AEB1-57EACDBF321F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "patience.console", "patience.console\patience.console.csproj", "{68213A35-7C72-4683-87D4-74950F450E4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1DC21D08-E37E-4FB2-AEB1-57EACDBF321F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DC21D08-E37E-4FB2-AEB1-57EACDBF321F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DC21D08-E37E-4FB2-AEB1-57EACDBF321F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68213A35-7C72-4683-87D4-74950F450E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68213A35-7C72-4683-87D4-74950F450E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68213A35-7C72-4683-87D4-74950F450E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68213A35-7C72-4683-87D4-74950F450E4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
