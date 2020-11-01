@@ -4,12 +4,12 @@
     {
     }
 
-    public class PrintOperation : IOperation
+    public class OperationPrint : IOperation
     {
 
     }
 
-    public class DealOperation : IOperation
+    public class OperationDeal : IOperation
     {
 
     }
@@ -19,9 +19,9 @@
         public (IOperation operation, string errorMessage) Parse(string apiOperation)
         {
             if (apiOperation == "P")
-                return (new PrintOperation(), null);
+                return (new OperationPrint(), null);
             else if (apiOperation == "D")
-                return (new DealOperation(), null);
+                return (new OperationDeal(), null);
             else
                 return (null, $"Operation '{apiOperation}' is not understood.  Allowed operations are P,D,U,R,<card>T, <card>TT, <card>F.");
         }

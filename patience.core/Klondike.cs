@@ -24,7 +24,8 @@
                 };
             }
 
-
+            if (operation is OperationDeal)
+                layout.Deal();
 
             // validation the operation - actually makes a Command to apply to the layout
 

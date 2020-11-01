@@ -7,6 +7,8 @@ namespace patience.core
     public class Layout
     {
         public Stock Stock { get; set; } = new Stock();
+
+        public void Deal() => Stock.Deal();
     }
 
     public class Stock
@@ -16,6 +18,17 @@ namespace patience.core
         /// Stock position is 1-indexed.  A zero indicates that no cards have been flipped yet.
         /// </summary>
         public int Position { get; set; } = 0;
+
+        public void Deal()
+        {
+            if (Position == Cards.Count)
+                Position = 0;
+            else
+                Position += 3;
+
+            if (Position > Cards.Count)
+                Position = Cards.Count;
+        }
     }
 
 

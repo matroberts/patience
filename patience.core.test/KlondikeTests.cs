@@ -33,7 +33,6 @@ namespace patience.core.test
 
         #region PrintTests
 
-
         [Test]
         public void Print_Stock_ShouldShow3Card_FromThePositionAndThePreviousTwoCards()
         {
@@ -124,6 +123,66 @@ namespace patience.core.test
             Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
         }
 
+        #endregion
+
+        #region DealTests
+
+        [Test]
+        public void Deal_TheStock_ShouldAdvanceThreeCards()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+            };
+            var klondike = new Klondike(layout);
+
+            // Act/Assert
+            var result1 = klondike.Operate("D");
+            Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
+
+            // Act/Assert
+            var result2 = klondike.Operate("D");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "4C", "5C", "6C" }));
+        }
+
+        [Test]
+        public void Deal_WhenADealPassesTheEndOfTheStock_TheEndOfTheStockIsShown()
+        {
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("D");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "5C", "6C", "7C" }));
+        }
+
+        [Test]
+        public void Deal_WhenDealHappensOnTheEndOfTheStock_YouGoBackToTheBeginningOfTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+            };
+
+            var klondike = new Klondike(layout);
+
+            // Act/Assert
+            var result1 = klondike.Operate("D");
+            Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new List<string>()));  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
+
+            // Act/Assert
+            var result2 = klondike.Operate("D");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
+        }
 
         #endregion
     }
