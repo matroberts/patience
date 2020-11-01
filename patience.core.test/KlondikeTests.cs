@@ -8,11 +8,31 @@ namespace patience.core.test
     [TestFixture]
     public class KlondikeTests
     {
+        #region GeneralTests
+
+        [Test]
+        public void IfOperation_IsNotUnderstood_AnErrorMessageIsReturned_AlongWithAnUnalertedLayout()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 4 } 
+            };
+
+            // Act
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("NotAnOperation");
+
+            // Assert
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.OperationNotUnderstood));
+            Assert.That(result.ErrorMessage, Is.EqualTo("Operation 'NotAnOperation' is not understood.  Allowed operations are P,D,U,R,<card>T, <card>TT, <card>F."));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2C", "3C", "4C" }));
+        }
+
+        #endregion
+
         #region PrintTests
 
-        /*
-         *   POSITION IS 1-Indexed
-         */
 
         [Test]
         public void Print_Stock_ShouldShow3Card_FromThePositionAndThePreviousTwoCards()

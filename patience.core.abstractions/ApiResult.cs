@@ -2,7 +2,8 @@
 {
     public enum ApiStatus
     {
-        Ok
+        Ok,
+        OperationNotUnderstood
     }
     public class ApiResult
     {
