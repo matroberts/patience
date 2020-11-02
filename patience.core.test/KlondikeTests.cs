@@ -25,7 +25,7 @@ namespace patience.core.test
 
             // Assert
             Assert.That(result.Status, Is.EqualTo(ApiStatus.OperationNotUnderstood));
-            Assert.That(result.ErrorMessage, Is.EqualTo("Operation 'NotAnOperation' is not understood.  Allowed operations are P,D,U,R,<card>T, <card>TT, <card>F."));
+            Assert.That(result.ErrorMessage, Is.EqualTo("Operation 'NotAnOperation' is not understood."));
             Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2C", "3C", "4C" }));
         }
 
@@ -42,7 +42,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new []{"2C", "3C", "4C"}));
@@ -57,7 +57,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new []{"AC", "2C", "3C"}));
@@ -72,7 +72,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "AC", "2C" }));
@@ -87,7 +87,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "AC" }));
@@ -102,7 +102,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
@@ -117,7 +117,7 @@ namespace patience.core.test
             };
 
             var klondike = new Klondike(layout);
-            var result = klondike.Operate("P");
+            var result = klondike.Operate("S");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
