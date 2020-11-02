@@ -13,7 +13,7 @@ namespace patience.console
 
             IKlondike klondike = new Klondike(new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4H", "5D", "6S", "7C" }, Position = 0 } // last position
             });
 
             while (true)
@@ -27,7 +27,7 @@ namespace patience.console
                     WriteError(result.ErrorMessage);
                 }
 
-                Console.WriteLine(result.Layout);
+                result.Layout.Render();
             }
         }
 
