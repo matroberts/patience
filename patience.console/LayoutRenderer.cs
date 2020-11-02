@@ -5,6 +5,16 @@ namespace patience.console
 {
     public static class LayoutRenderer
     {
+        public static void Render(this ApiResult result)
+        {
+            result.Layout.Render();
+            if (result.Status != ApiStatus.Ok)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(result.ErrorMessage);
+            }
+        }        
+        
         public static void Render(this ApiLayout layout)
         {
             foreach (var stockCard in layout.Stock)

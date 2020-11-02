@@ -9,7 +9,6 @@ namespace patience.console
         {
             Console.CancelKeyPress += (sender, eventArgs) => Exit();
             Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
 
             IKlondike klondike = new Klondike(new Layout()
             {
@@ -17,9 +16,12 @@ namespace patience.console
             });
 
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("Press H for help.");
             while (true)
             {
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine();
                 Console.Write("Patience> ");
                 var operation = Console.ReadLine();
                 Console.Clear();
@@ -35,13 +37,7 @@ namespace patience.console
                 }
 
                 var result = klondike.Operate(operation);
-
-                if (result.Status != ApiStatus.Ok)
-                {
-                    WriteError(result.ErrorMessage);
-                }
-
-                result.Layout.Render();
+                result.Render();
             }
         }
 
@@ -54,17 +50,13 @@ namespace patience.console
 
         private static void Help()
         {
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine("  H Help");
             Console.WriteLine("  E Exit");
             Console.WriteLine("  D Deal - turn over 3 cards from the stock");
             Console.WriteLine("  S Show - print the cards out without making any move");
         }
 
-        public static void WriteError(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.Black;
-        }
+
     }
 }
