@@ -141,11 +141,13 @@ namespace patience.core.test
             var result1 = klondike.Operate("D");
             Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
+            Assert.That(result1.Layout.MoreStock, Is.True);
 
             // Act/Assert
             var result2 = klondike.Operate("D");
             Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "4C", "5C", "6C" }));
+            Assert.That(result1.Layout.MoreStock, Is.True);
         }
 
         [Test]
@@ -161,6 +163,7 @@ namespace patience.core.test
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "5C", "6C", "7C" }));
+            Assert.That(result.Layout.MoreStock, Is.False);
         }
 
         [Test]
@@ -177,11 +180,29 @@ namespace patience.core.test
             var result1 = klondike.Operate("D");
             Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result1.Layout.Stock, Is.EqualTo(new List<string>()));  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
+            Assert.That(result1.Layout.MoreStock, Is.True);
 
             // Act/Assert
             var result2 = klondike.Operate("D");
             Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
+            Assert.That(result1.Layout.MoreStock, Is.True);
+        }
+
+        [Test]
+        public void Deal_WorkCorrectly_WhenTheStockIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = new Stock() { Cards = { }, Position = 0 } // last position
+            };
+
+            var klondike = new Klondike(layout);
+
+            var result1 = klondike.Operate("D");
+            Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new List<string>()));  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
+            Assert.That(result1.Layout.MoreStock, Is.False);
         }
 
         #endregion

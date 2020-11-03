@@ -19,6 +19,8 @@ namespace patience.core
         /// </summary>
         public int Position { get; set; } = 0;
 
+        public bool MoreStock => Position < Cards.Count;
+
         public void Deal()
         {
             if (Position == Cards.Count)
@@ -36,7 +38,11 @@ namespace patience.core
     {
         public static ApiLayout ToApiLayout(this Layout layout)
         {
-            return new ApiLayout(){ Stock = layout.Stock.ToApiStock()};
+            return new ApiLayout()
+            {
+                Stock = layout.Stock.ToApiStock(),
+                MoreStock = layout.Stock.MoreStock,
+            };
         }
 
         public static List<string> ToApiStock(this Stock stock) => stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()).ToList();
