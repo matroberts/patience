@@ -1,4 +1,6 @@
-﻿namespace patience.core
+﻿using System;
+
+namespace patience.core
 {
     public class Klondike : IKlondike
     {
@@ -18,18 +20,28 @@
             {
                 return new ApiResult()
                 {
-                    ErrorMessage = errorMessage,
+                    Message = errorMessage,
                     Status = ApiStatus.OperationNotUnderstood,
+                    Layout = layout.ToApiLayout()
+                };
+            } 
+            if (operation is OperationHelp)
+            {
+                return new ApiResult()
+                {
+                    Message = @"
+Ctrl+C Exit
+H      Help
+D      Deal - turn over 3 cards from the stock",
+                    Status = ApiStatus.Ok,
                     Layout = layout.ToApiLayout()
                 };
             }
 
             if (operation is OperationDeal)
+            {
                 layout.Deal();
-
-            // validation the operation - actually makes a Command to apply to the layout
-
-            // do the operation - do the move to the layout
+            }
 
             return new ApiResult()
             {

@@ -9,6 +9,6 @@
     {
         public ApiLayout Layout { get; set; }
         public ApiStatus Status { get; set; }
-        public string ErrorMessage { get; set; }
+        public string Message { get; set; }
     }
 }

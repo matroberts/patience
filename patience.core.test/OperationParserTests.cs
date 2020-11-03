@@ -22,17 +22,17 @@ namespace patience.core.test
             Assert.That(errorMessage, Is.EqualTo("Operation 'NotAnOperation' is not understood."));
         }
 
-        [TestCase("S")]
-        [TestCase("s")]
-        [TestCase("show")]
-        public void An_S_IsTheShowOperation(string opString)
+        [TestCase("H")]
+        [TestCase("h")]
+        [TestCase("help")]
+        public void An_H_IsTheHelpOperation(string opString)
         {
             // Act
             var parser = new OperationParser();
             var (operation, errorMessage) = parser.Parse(opString);
 
             // Assert
-            Assert.That(operation, Is.TypeOf<OperationShow>());
+            Assert.That(operation, Is.TypeOf<OperationHelp>());
             Assert.That(errorMessage, Is.Null);
         }
         

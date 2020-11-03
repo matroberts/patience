@@ -8,15 +8,13 @@ namespace patience.console
         public static void Render(this ApiResult result)
         {
             result.Layout.Render();
-            if (result.Status != ApiStatus.Ok)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.ErrorMessage);
-            }
+            Console.ForegroundColor = result.Status == ApiStatus.Ok ? ConsoleColor.Black : ConsoleColor.Red;
+            Console.WriteLine(result.Message);
         }        
         
         public static void Render(this ApiLayout layout)
         {
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(layout.MoreStock ? "XX " : "-- ");
             foreach (var stockCard in layout.Stock)
             {

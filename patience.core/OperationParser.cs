@@ -6,7 +6,7 @@ namespace patience.core
     {
     }
 
-    public class OperationShow : IOperation
+    public class OperationHelp : IOperation
     {
 
     }
@@ -20,8 +20,8 @@ namespace patience.core
     {
         public (IOperation operation, string errorMessage) Parse(string apiOperation)
         {
-            if (apiOperation.StartsWith("S", StringComparison.OrdinalIgnoreCase))
-                return (new OperationShow(), null);
+            if (apiOperation.StartsWith("H", StringComparison.OrdinalIgnoreCase))
+                return (new OperationHelp(), null);
             else if (apiOperation.StartsWith("D", StringComparison.OrdinalIgnoreCase))
                 return (new OperationDeal(), null);
             else
