@@ -9,6 +9,7 @@ namespace patience.core
         public Stock Stock { get; } = new Stock();
         public Foundation Foundation { get; set; } = new Foundation();
 
+        public void AssertInvariants() => Stock.AssertInvariants();
         public void Deal() => Stock.Deal();
     }
 
@@ -29,13 +30,21 @@ namespace patience.core
 
     public class Stock
     {
-        public List<Card> Cards { get; set; } = new List<Card>();
+        public List<Card> Cards { get; } = new List<Card>();
         /// <summary>
         /// Stock position is 1-indexed.  A zero indicates that no cards have been flipped yet.
         /// </summary>
         public int Position { get; set; } = 0;
 
         public bool MoreStock => Position < Cards.Count;
+
+        public void AssertInvariants()
+        {
+            if(Position < 0)
+                throw new InvalidOperationException($"Invariant Violation - Stock Position {Position} is less than 0.");
+            if (Position > Cards.Count)
+                throw new InvalidOperationException($"Invariant Violation - Stock Position {Position} is greater than the stock count {Cards.Count}.");
+        }
 
         public void Deal()
         {

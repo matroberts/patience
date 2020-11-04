@@ -11,7 +11,18 @@ namespace patience.core.test
         #region GeneralTests
 
         [Test]
-        public void IfOperation_IsNotUnderstood_AnErrorMessageIsReturned_AlongWithAnUnalertedLayout()
+        public void AssertInvariant_IsCalledOnConstruction_ToCheckTheLayoutIsSetupProperly()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = -1 }
+            };
+
+            Assert.That(() => new Klondike(layout), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position -1 is less than 0."));
+        }
+
+        [Test]
+        public void IfOperation_IsNotUnderstood_AnErrorMessageIsReturned_AlongWithAnUnchangedLayout()
         {
             // Arrange
             var layout = new Layout()

@@ -9,8 +9,9 @@ namespace patience.core
 
         public Klondike(Layout layout)
         {
-            this.layout = layout;
             this.parser = new OperationParser();
+            this.layout = layout;
+            this.layout.AssertInvariants();
         }
 
         public ApiResult Operate(string apiOperation)
