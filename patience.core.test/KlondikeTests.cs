@@ -155,7 +155,10 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = { Cards = { }, Position = 0 } // 1-indexed !!
+                Foundation =
+                {
+                    ClubStack = {"AC", "2C", "3C"}
+                }
             };
 
             var klondike = new Klondike(layout);

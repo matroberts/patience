@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,12 @@ namespace patience.core
         public Stock Stock { get; } = new Stock();
         public Foundation Foundation { get; set; } = new Foundation();
 
-        public void AssertInvariants() => Stock.AssertInvariants();
+        public void AssertInvariants()
+        {
+            Stock.AssertInvariants();
+            Foundation.AssertInvariants();
+        }
+
         public void Deal() => Stock.Deal();
     }
 
@@ -19,13 +25,32 @@ namespace patience.core
         public FoundationStack DiamondStack { get; set; } = new FoundationStack(Suit.Diamonds);
         public FoundationStack HeartStack { get; set; } = new FoundationStack(Suit.Hearts);
         public FoundationStack SpadeStack { get; set; } = new FoundationStack(Suit.Spades);
+
+        public void AssertInvariants()
+        {
+            ClubStack.AssertInvariants();
+            DiamondStack.AssertInvariants();
+            HeartStack.AssertInvariants();
+            SpadeStack.AssertInvariants();
+        }
     }
 
-    public class FoundationStack
+    public class FoundationStack : IEnumerable<Card>
     {
         public FoundationStack(Suit suit) => Suit = suit;
         public Suit Suit { get; }
         public List<Card> Cards { get; set; } = new List<Card>();
+        public IEnumerator<Card> GetEnumerator() => Cards.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        public void Add(Card card) => Cards.Add(card);
+        
+        public void AssertInvariants()
+        {
+            if (Cards.Any(c => c.Suit != Suit))
+                throw new InvalidOperationException($"Invariant Violation - FoundationStack {Suit} contains the card '{Cards.First(c => c.Suit != Suit)}' which does not match suit.");
+            if (Cards.Where( (c, i) => c.Rank != i+1).Any())
+                throw new InvalidOperationException($"Invariant Violation - FoundationStack {Suit} is not in rank order, ranks are '{string.Join(", ", Cards.Select(c => c.Rank.ToString()))}'.");
+        }
     }
 
     public class Stock
