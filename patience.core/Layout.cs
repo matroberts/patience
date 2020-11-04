@@ -6,9 +6,25 @@ namespace patience.core
 {
     public class Layout
     {
-        public Stock Stock { get; set; } = new Stock();
+        public Stock Stock { get; } = new Stock();
+        public Foundation Foundation { get; set; } = new Foundation();
 
         public void Deal() => Stock.Deal();
+    }
+
+    public class Foundation
+    {
+        public FoundationStack ClubStack { get; set; } = new FoundationStack(Suit.Clubs);
+        public FoundationStack DiamondStack { get; set; } = new FoundationStack(Suit.Diamonds);
+        public FoundationStack HeartStack { get; set; } = new FoundationStack(Suit.Hearts);
+        public FoundationStack SpadeStack { get; set; } = new FoundationStack(Suit.Spades);
+    }
+
+    public class FoundationStack
+    {
+        public FoundationStack(Suit suit) => Suit = suit;
+        public Suit Suit { get; }
+        public List<Card> Cards { get; set; } = new List<Card>();
     }
 
     public class Stock

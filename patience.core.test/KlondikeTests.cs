@@ -16,7 +16,7 @@ namespace patience.core.test
             // Arrange
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 4 } 
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 4 } 
             };
 
             // Act
@@ -54,7 +54,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = {"AC", "2C", "3C", "4C", "5C"}, Position = 4 } // 1-indexed !!
+                Stock = { Cards = {"AC", "2C", "3C", "4C", "5C"}, Position = 4 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -69,7 +69,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = {"AC", "2C", "3C", "4C", "5C"}, Position = 3 } // 1-indexed !!
+                Stock = { Cards = {"AC", "2C", "3C", "4C", "5C"}, Position = 3 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -84,7 +84,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 2 } // 1-indexed !!
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 2 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -99,7 +99,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 1 } // 1-indexed !!
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 1 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -114,7 +114,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 0 } // 1-indexed !!
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 0 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -129,7 +129,22 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = {  }, Position = 0 } // 1-indexed !!
+                Stock = { Cards = {  }, Position = 0 } // 1-indexed !!
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
+        }
+
+        [Test]
+        public void Print_Foundation_ShouldShowTheFoundation()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 } // 1-indexed !!
             };
 
             var klondike = new Klondike(layout);
@@ -149,7 +164,7 @@ D      Deal - turn over 3 cards from the stock"));
             // Arrange
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
             };
             var klondike = new Klondike(layout);
 
@@ -171,7 +186,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
             };
 
             var klondike = new Klondike(layout);
@@ -187,7 +202,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
             };
 
             var klondike = new Klondike(layout);
@@ -210,7 +225,7 @@ D      Deal - turn over 3 cards from the stock"));
         {
             var layout = new Layout()
             {
-                Stock = new Stock() { Cards = { }, Position = 0 } // last position
+                Stock = { Cards = { }, Position = 0 } // last position
             };
 
             var klondike = new Klondike(layout);
