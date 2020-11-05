@@ -26,12 +26,23 @@ namespace patience.core
         public FoundationStack HeartStack { get; set; } = new FoundationStack(Suit.Hearts);
         public FoundationStack SpadeStack { get; set; } = new FoundationStack(Suit.Spades);
 
+        public IEnumerable<FoundationStack> Stacks
+        {
+            get
+            {
+                yield return ClubStack;
+                yield return DiamondStack;
+                yield return HeartStack;
+                yield return SpadeStack;
+            }
+        }
+
         public void AssertInvariants()
         {
-            ClubStack.AssertInvariants();
-            DiamondStack.AssertInvariants();
-            HeartStack.AssertInvariants();
-            SpadeStack.AssertInvariants();
+            foreach (var stack in Stacks)
+            {
+                stack.AssertInvariants();
+            }
         }
     }
 
@@ -83,7 +94,6 @@ namespace patience.core
         }
     }
 
-
     public static class LayoutExtensions
     {
         public static ApiLayout ToApiLayout(this Layout layout)
@@ -92,9 +102,11 @@ namespace patience.core
             {
                 Stock = layout.Stock.ToApiStock(),
                 MoreStock = layout.Stock.MoreStock,
+                Foundation = layout.Foundation.ToApiFoundation(),
             };
         }
 
         public static List<string> ToApiStock(this Stock stock) => stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()).ToList();
+        public static List<string> ToApiFoundation(this Foundation foundation) => (from stack in foundation.Stacks where stack.Cards.Any() select stack.Cards.Last().ToString()).ToList();
     }
 }

@@ -132,7 +132,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
+            Assert.That(result.Layout.Stock, Is.Empty);
         }
 
         [Test]
@@ -147,17 +147,32 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
+            Assert.That(result.Layout.Stock, Is.Empty);
         }
 
         [Test]
-        public void Print_Foundation_ShouldShowTheFoundation()
+        public void Print_Foundation_WhenTheFoundationIsEmpty_AnEmptyListIsReturned()
+        {
+            var layout = new Layout()
+            {
+                Foundation = { }
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Foundation, Is.Empty);
+        }
+
+        [Test]
+        public void Print_Foundation_ShowsTheTopCardInAEachFoundationStack()
         {
             var layout = new Layout()
             {
                 Foundation =
                 {
-                    ClubStack = {"AC", "2C", "3C"}
+                    DiamondStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -165,7 +180,28 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new List<string>()));
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"3D"}));
+        }
+
+        [Test]
+        public void Print_Foundation_ShouldShowAllTheFoundationStacks()
+        {
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    ClubStack = {"AC", "2C", "3C"},
+                    DiamondStack = {"AD", "2D"},
+                    HeartStack = {"AH"},
+                    SpadeStack = {"AS", "2S", "3S", "4S"},
+                }
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new[] { "3C", "2D", "AH", "4S" }));
         }
 
         #endregion
@@ -224,7 +260,7 @@ D      Deal - turn over 3 cards from the stock"));
             // Act/Assert
             var result1 = klondike.Operate("D");
             Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result1.Layout.Stock, Is.EqualTo(new List<string>()));  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
+            Assert.That(result1.Layout.Stock, Is.Empty);  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
             Assert.That(result1.Layout.MoreStock, Is.True);
 
             // Act/Assert
@@ -246,7 +282,7 @@ D      Deal - turn over 3 cards from the stock"));
 
             var result1 = klondike.Operate("D");
             Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result1.Layout.Stock, Is.EqualTo(new List<string>()));  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
+            Assert.That(result1.Layout.Stock, Is.Empty);  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
             Assert.That(result1.Layout.MoreStock, Is.False);
         }
 
