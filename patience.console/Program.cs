@@ -12,7 +12,8 @@ namespace patience.console
 
             IKlondike klondike = new Klondike(new Layout()
             {
-                Stock = { Cards = { "AC", "2C", "3C", "4H", "5D", "6S", "7C" }, Position = 0 } // last position
+                Stock = { Cards = { "AC", "2C", "3C", "4H", "5D", "6S", "7C" }, Position = 0 },
+                Foundation = { SpadeStack = {"AS", "2S"}}
             });
 
             Console.Clear();

@@ -8,6 +8,7 @@ namespace patience.console
         public static void Render(this ApiResult result)
         {
             result.Layout.Render();
+            Console.WriteLine();
             Console.ForegroundColor = result.Status == ApiStatus.Ok ? ConsoleColor.Black : ConsoleColor.Red;
             Console.WriteLine(result.Message);
         }        
@@ -22,6 +23,12 @@ namespace patience.console
                 Console.Write(" ");
             }
             Console.WriteLine();
+            Console.WriteLine();
+            foreach (var foundationCard in layout.Foundation)
+            {
+                foundationCard.Render();
+                Console.Write(" ");
+            }
         }
 
         public static void Render(this string card)

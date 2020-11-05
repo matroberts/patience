@@ -107,6 +107,6 @@ namespace patience.core
         }
 
         public static List<string> ToApiStock(this Stock stock) => stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()).ToList();
-        public static List<string> ToApiFoundation(this Foundation foundation) => (from stack in foundation.Stacks where stack.Cards.Any() select stack.Cards.Last().ToString()).ToList();
+        public static List<string> ToApiFoundation(this Foundation foundation) => foundation.Stacks.Select(stack => stack.Cards.Any() ? stack.Cards.Last().ToString() : "--").ToList();
     }
 }

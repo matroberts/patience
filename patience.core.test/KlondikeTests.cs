@@ -151,7 +151,7 @@ D      Deal - turn over 3 cards from the stock"));
         }
 
         [Test]
-        public void Print_Foundation_WhenTheFoundationIsEmpty_AnEmptyListIsReturned()
+        public void Print_Foundation_WhenAFoundationStackIsEmpty_DashesAreReturned()
         {
             var layout = new Layout()
             {
@@ -162,7 +162,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Foundation, Is.Empty);
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"--", "--", "--", "--"}));
         }
 
         [Test]
@@ -180,7 +180,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"3D"}));
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"--", "3D", "--", "--"}));
         }
 
         [Test]
