@@ -9,23 +9,25 @@ namespace patience.core
         public Stock Stock { get; } = new Stock();
         public Foundation Foundation { get; set; } = new Foundation();
 
-        public void AssertInvariants()
-        {
-            Stock.AssertInvariants();
-            Foundation.AssertInvariants();
-        }
-
-        public void Deal() => Stock.Deal();
-
         public IEnumerable<IStack> Stacks
         {
             get
             {
                 yield return Stock;
-                foreach(var stack in Foundation.Stacks)
+                foreach (var stack in Foundation.Stacks)
                     yield return stack;
             }
         }
+
+        public void AssertInvariants()
+        {
+            foreach (var stack in Stacks)
+            {
+                stack.AssertInvariants();
+            }
+        }
+
+        public void Deal() => Stock.Deal();
 
         public void Move(string from, string to)
         {
@@ -57,14 +59,6 @@ namespace patience.core
                 yield return DiamondStack;
                 yield return HeartStack;
                 yield return SpadeStack;
-            }
-        }
-
-        public void AssertInvariants()
-        {
-            foreach (var stack in Stacks)
-            {
-                stack.AssertInvariants();
             }
         }
     }
