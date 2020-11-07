@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 
@@ -7,6 +8,8 @@ namespace patience.core.test
     [TestFixture]
     public class LayoutTests
     {
+        #region AssertInvariants
+
         [Test]
         public void AssertInvariants_IfStockPositionIsLessThanZero_AnExceptionIsThrown()
         {
@@ -70,5 +73,105 @@ namespace patience.core.test
             Assert.That(() => new Layout() { Foundation = { HeartStack = { "AS" } } }.AssertInvariants(), Throws.InvalidOperationException);
             Assert.That(() => new Layout() { Foundation = { SpadeStack = { "AC" } } }.AssertInvariants(), Throws.InvalidOperationException);
         }
+
+        #endregion
+
+        #region Move
+
+        [Test]
+        public void Move_FromStockToFoundation_ShouldWork_IfInvaiantsNotViolatated()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D"}, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            layout.Move("Stock", "DiamondsStack");
+
+            Assert.That(layout.Stock.Cards, Is.Empty);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Foundation.DiamondStack, Is.EqualTo(new List<Card>{ "AD", "2D", "3D", "4D"}));
+        }
+
+        [Test]
+        public void Move_ThrowsException_IfTheFromStackDoesNotExist()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("NotExists", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("From stack 'NotExists' does not exist."));
+        }
+
+        [Test]
+        public void Move_ThrowsException_IfTheToStackDoesNotExist()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "NotExists"), Throws.ArgumentException.With.Message.EqualTo("To stack 'NotExists' does not exist."));
+        }
+
+        [Test]
+        public void Move_FromStock_ThrowsException_IfThereIsNoCardToTakeFromTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 0 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("The stock has no card to take.")); ;
+        }
+
+        [Test]
+        public void Move_ToFoundation_ThrowsException_IfThereIsASuitMismatch()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4C" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("Cannot give card '4C' to the DiamondsStack because the suit is wrong.")); ;
+        }
+
+        [Test]
+        public void Move_ToFoundation_ThrowsException_IfTheRankIsWrong()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "5D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("Cannot give card '5D' to the DiamondsStack because the rank is wrong.")); ;
+        }
+
+        #endregion
     }
 }
