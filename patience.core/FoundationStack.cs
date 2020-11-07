@@ -17,9 +17,9 @@ namespace patience.core
         public void AssertInvariants()
         {
             if (Cards.Any(c => c.Suit != Suit))
-                throw new InvalidOperationException($"Invariant Violation - FoundationStack {Suit} contains the card '{Cards.First(c => c.Suit != Suit)}' which does not match suit.");
+                throw new InvalidOperationException($"Invariant Violation - {Name} contains the card '{Cards.First(c => c.Suit != Suit)}' which does not match suit.");
             if (Cards.Where( (c, i) => c.Rank != i+1).Any())
-                throw new InvalidOperationException($"Invariant Violation - FoundationStack {Suit} is not in rank order, ranks are '{string.Join(", ", Cards.Select(c => c.Rank.ToString()))}'.");
+                throw new InvalidOperationException($"Invariant Violation - {Name} is not in rank order, ranks are '{string.Join(", ", Cards.Select(c => c.Rank.ToString()))}'.");
         }
 
         public string Name => $"{this.Suit}Stack";

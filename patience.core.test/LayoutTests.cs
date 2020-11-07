@@ -40,7 +40,7 @@ namespace patience.core.test
                 Foundation = {ClubStack = {"AH"}}
             };
 
-            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - FoundationStack Clubs contains the card 'AH' which does not match suit."));
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack contains the card 'AH' which does not match suit."));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace patience.core.test
                 Foundation = { ClubStack = { "2C" } }
             };
 
-            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - FoundationStack Clubs is not in rank order, ranks are '2'."));
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack is not in rank order, ranks are '2'."));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace patience.core.test
                 Foundation = { ClubStack = { "AC", "2C", "4C" } }
             };
 
-            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - FoundationStack Clubs is not in rank order, ranks are '1, 2, 4'."));
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack is not in rank order, ranks are '1, 2, 4'."));
         }
 
         [Test]
