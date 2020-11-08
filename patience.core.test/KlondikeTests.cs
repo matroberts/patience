@@ -35,7 +35,7 @@ namespace patience.core.test
             var result = klondike.Operate("NotAnOperation");
 
             // Assert
-            Assert.That(result.Status, Is.EqualTo(ApiStatus.OperationNotUnderstood));
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Error));
             Assert.That(result.Message, Is.EqualTo("Operation 'NotAnOperation' is not understood."));
             Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2C", "3C", "4C" }));
         }
