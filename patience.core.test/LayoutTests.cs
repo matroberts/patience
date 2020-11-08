@@ -79,7 +79,7 @@ namespace patience.core.test
         #region Move
 
         [Test]
-        public void Move_FromStockToFoundation_ShouldWork_IfInvaiantsNotViolatated()
+        public void Move_FromStockToFoundation_ShouldWork_IfInvariantsNotViolated()
         {
             var layout = new Layout()
             {
