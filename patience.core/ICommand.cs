@@ -18,4 +18,19 @@
             throw new System.NotImplementedException();
         }
     }
+
+    public class MoveCommand : ICommand
+    {
+        public string From { get; set; }
+        public string To { get; set; }
+        public void Do(Layout layout)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Undo(Layout layout)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }

@@ -58,13 +58,13 @@ namespace patience.core.test
         [Test]
         public void ImplicitCast_WillThrow_IfTheStringTooShort()
         {
-            Assert.That(() => { Card card = "A"; }, Throws.ArgumentException.With.Message.EqualTo("String to short in implicit cast to Card"));
+            Assert.That(() => { Card card = "A"; }, Throws.ArgumentException.With.Message.EqualTo("'A' is to short to be a card, you need to specify rank and suit, like 4C."));
         }
 
         [Test]
         public void ImplicitCast_WillThrow_IfTheStringTooLong()
         {
-            Assert.That(() => { Card card = "999C"; }, Throws.ArgumentException.With.Message.EqualTo("String to long in implicit cast to Card"));
+            Assert.That(() => { Card card = "999C"; }, Throws.ArgumentException.With.Message.EqualTo("'999C' is to long to be a card, you need to specify rank and suit, like 4C."));
         }
 
         [TestCase("2C", Suit.Clubs)]
@@ -80,7 +80,7 @@ namespace patience.core.test
         [Test]
         public void ImplicitCast_WillThrow_IfTheSuitCharacterIsNotAllowed()
         {
-            Assert.That(() => { Card card = "2c"; }, Throws.ArgumentException.With.Message.EqualTo("Suit 'c' is not recognized.  Allowed values are C,D,H,S."));
+            Assert.That(() => { Card card = "2g"; }, Throws.ArgumentException.With.Message.EqualTo("Suit 'g' is not recognized.  Allowed values are C,D,H,S."));
         }
 
         [TestCase("AC", 1)]
@@ -108,14 +108,82 @@ namespace patience.core.test
             Assert.That(() => { Card card = "11C"; }, Throws.ArgumentException.With.Message.EqualTo("Rank '11' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K."));
         }
 
+        #endregion
+
+        #region Create - same as implicit cast but with error message instead of exception
+
         [Test]
-        public void Card_HasAnImplicitConversionFromString()
+        public void Create_WillReturnError_IfTheStringTooShort()
         {
-            var cards = new List<Card> {"2C", "KD"};
-            foreach (var card in cards)
-            {
-                Console.WriteLine(card);
-            }
+            var (card, errorMessage) = Card.Create("A");
+
+            Assert.That(card, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo("'A' is to short to be a card, you need to specify rank and suit, like 4C."));
+        }
+
+        [Test]
+        public void Create_WillReturnError_IfTheStringTooLong()
+        {
+            var (card, errorMessage) = Card.Create("999C");
+
+            Assert.That(card, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo("'999C' is to long to be a card, you need to specify rank and suit, like 4C."));
+        }
+
+        [TestCase("2C", Suit.Clubs)]
+        [TestCase("2c", Suit.Clubs)]
+        [TestCase("2D", Suit.Diamonds)]
+        [TestCase("2d", Suit.Diamonds)]
+        [TestCase("2H", Suit.Hearts)]
+        [TestCase("2h", Suit.Hearts)]
+        [TestCase("2S", Suit.Spades)]
+        [TestCase("2s", Suit.Spades)]
+        public void Create_CorrectlyIdentifies_TheSuit(string str, Suit suit)
+        {
+            var (card, errorMessage) = Card.Create(str);
+
+            Assert.That(card.Value.Suit, Is.EqualTo(suit));
+        }
+
+        [Test]
+        public void Create_WillReturnError_IfTheSuitCharacterIsNotAllowed()
+        {
+            var (card, errorMessage) = Card.Create("2G");
+
+            Assert.That(card, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo("Suit 'G' is not recognized.  Allowed values are C,D,H,S."));
+        }
+        
+        [TestCase("AC", 1)]
+        [TestCase("aC", 1)]
+        [TestCase("2C", 2)]
+        [TestCase("3C", 3)]
+        [TestCase("4C", 4)]
+        [TestCase("5C", 5)]
+        [TestCase("6C", 6)]
+        [TestCase("7C", 7)]
+        [TestCase("8C", 8)]
+        [TestCase("9C", 9)]
+        [TestCase("10C", 10)]
+        [TestCase("JC", 11)]
+        [TestCase("jC", 11)]
+        [TestCase("QC", 12)]
+        [TestCase("qC", 12)]
+        [TestCase("KC", 13)]
+        [TestCase("kC", 13)]
+        public void Create_CorrectlyIdentifies_TheRank(string str, int rank)
+        {
+            var (card, errorMessage) = Card.Create(str);
+
+            Assert.That(card.Value.Rank, Is.EqualTo(rank));
+        }
+        
+        [Test]
+        public void Create_ReturnsError_IfTheRankStringIsNotAllowed()
+        {
+            var (card, errorMessage) = Card.Create("11C");
+
+            Assert.That(errorMessage, Is.EqualTo("Rank '11' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K."));
         }
 
         #endregion
