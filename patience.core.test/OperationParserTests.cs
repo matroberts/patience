@@ -75,7 +75,7 @@ namespace patience.core.test
 
         [TestCase("FAD")]
         [TestCase("fad")]
-        public void A_F_ResultsInAMoveCommand_IfEverythingIsValid(string opString)
+        public void A_FoundationMove_ResultsInAMoveCommand_IfEverythingIsValid(string opString)
         {
             // Arrange
             var layout = new Layout()
@@ -101,7 +101,7 @@ namespace patience.core.test
         }
 
         [Test]
-        public void A_F_ResultsInAError_IfTheCardDoesNotParse()
+        public void A_FoundationMove_ResultsInAError_IfTheCardDoesNotParse()
         {
             // Arrange
             var layout = new Layout()
@@ -123,8 +123,32 @@ namespace patience.core.test
             Assert.That(errorMessage, Is.EqualTo("'NotACard' is not recognized as a card."));
         }
 
-        // card not available for move from stock
+        [Test]
+        public void A_FoundationMove_ResultsInAError_IfTheCardIsNotAvailableToBeMoved()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AD" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {}
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, "F4D");
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Error));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo("'4D' is not available to be moved."));
+        }
+
+        // card not available for move 
         // card cannot be accepted on foundation
+        // from and too are same location....?
 
 
         #endregion

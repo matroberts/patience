@@ -33,6 +33,10 @@ namespace patience.core
                 return (null, errorMessage);
             var card = cardNullable.Value;
 
+            var from = layout.IsAvailable(card);
+            if(from==null)
+                return (null, $"'{card}' is not available to be moved.");
+
             return (new MoveCommand(), null);
         }
     }

@@ -24,6 +24,13 @@ namespace patience.core
 
         public string Name => $"{this.Suit}Stack";
 
+        public bool IsAvailable(Card card)
+        {
+            if (Cards.Any() == false)
+                return false;
+            return Cards.Last() == card;
+        }
+
         public Card Take()
         {
             throw new NotImplementedException();

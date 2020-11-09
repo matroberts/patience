@@ -173,5 +173,87 @@ namespace patience.core.test
         }
 
         #endregion
+
+        #region IsAvailable
+
+        [Test]
+        public void IsAvailable_FromStock_ReturnsTheStackName_IfThePositionIsAtTheCard()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("4D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("Stock"));
+        }
+
+        [Test]
+        public void IsAvailable_FromStock_ReturnsNull_IfTheCardIsNotAtPosition()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 0 },
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("4D");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        [Test]
+        public void IsAvailable_FromFoundation_ReturnsTheStackName_IfTheCardIsOnTopOfStack()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("3D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("DiamondsStack"));
+        }
+
+        [Test]
+        public void IsAvailable_FromFoundation_ReturnsNull_IfTheCardIsNotOnTop()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondStack = {"AD", "2D", "3D", "4D"}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("3D");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        #endregion
     }
 }

@@ -42,6 +42,11 @@ namespace patience.core
             var card = fromStack.Take();
             toStack.Give(card);
         }
+
+        public string IsAvailable(Card card)
+        {
+            return Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
+        }
     }
 
     public class Foundation

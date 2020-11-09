@@ -33,6 +33,13 @@ namespace patience.core
         }
 
         public string Name => "Stock";
+        public bool IsAvailable(Card card)
+        {
+            if (Position <= 0)
+                return false;
+            return Cards[Position - 1] == card;
+        }
+
         public Card Take()
         {
             if(Position <= 0)

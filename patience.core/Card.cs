@@ -32,6 +32,10 @@ namespace patience.core
                 return cardObj.Value;
         }
 
+        public static bool operator ==(Card left, Card right) => left.Rank == right.Rank && left.Suit == right.Suit;
+
+        public static bool operator !=(Card left, Card right) => !(left==right);
+
         public override string ToString()
         {
             var suitChar = Suit switch
@@ -93,5 +97,7 @@ namespace patience.core
 
             return (new Card(suit, rank), null);
         }
+
+
     }
 }
