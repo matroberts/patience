@@ -120,7 +120,7 @@ namespace patience.core.test
             // Assert
             Assert.That(act, Is.EqualTo(Act.Error));
             Assert.That(command, Is.Null);
-            Assert.That(errorMessage, Is.EqualTo("'NotACard' is to long to be a card, you need to specify rank and suit, like 4C."));
+            Assert.That(errorMessage, Is.EqualTo("'NotACard' is not recognized as a card."));
         }
 
         // card not available for move from stock

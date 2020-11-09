@@ -58,13 +58,13 @@ namespace patience.core.test
         [Test]
         public void ImplicitCast_WillThrow_IfTheStringTooShort()
         {
-            Assert.That(() => { Card card = "A"; }, Throws.ArgumentException.With.Message.EqualTo("'A' is to short to be a card, you need to specify rank and suit, like 4C."));
+            Assert.That(() => { Card card = "A"; }, Throws.ArgumentException.With.Message.EqualTo("'A' is not recognized as a card."));
         }
 
         [Test]
         public void ImplicitCast_WillThrow_IfTheStringTooLong()
         {
-            Assert.That(() => { Card card = "999C"; }, Throws.ArgumentException.With.Message.EqualTo("'999C' is to long to be a card, you need to specify rank and suit, like 4C."));
+            Assert.That(() => { Card card = "999C"; }, Throws.ArgumentException.With.Message.EqualTo("'999C' is not recognized as a card."));
         }
 
         [TestCase("2C", Suit.Clubs)]
@@ -80,7 +80,7 @@ namespace patience.core.test
         [Test]
         public void ImplicitCast_WillThrow_IfTheSuitCharacterIsNotAllowed()
         {
-            Assert.That(() => { Card card = "2g"; }, Throws.ArgumentException.With.Message.EqualTo("Suit 'g' is not recognized.  Allowed values are C,D,H,S."));
+            Assert.That(() => { Card card = "2g"; }, Throws.ArgumentException.With.Message.EqualTo("'2g' is not recognized as a card."));
         }
 
         [TestCase("AC", 1)]
@@ -105,20 +105,30 @@ namespace patience.core.test
         [Test]
         public void ImplicitCast_WillThrow_IfTheRankStringIsNotAllowed()
         {
-            Assert.That(() => { Card card = "11C"; }, Throws.ArgumentException.With.Message.EqualTo("Rank '11' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K."));
+            Assert.That(() => { Card card = "11C"; }, Throws.ArgumentException.With.Message.EqualTo("'11C' is not recognized as a card."));
         }
 
         #endregion
 
         #region Create - same as implicit cast but with error message instead of exception
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        public void Create_WillReturnError_IfTheStringIsNullEmptyOrWhitespace(string str)
+        {
+            var (card, errorMessage) = Card.Create(str);
+
+            Assert.That(card, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo($"'{str}' is not recognized as a card."));
+        }
         [Test]
         public void Create_WillReturnError_IfTheStringTooShort()
         {
             var (card, errorMessage) = Card.Create("A");
 
             Assert.That(card, Is.Null);
-            Assert.That(errorMessage, Is.EqualTo("'A' is to short to be a card, you need to specify rank and suit, like 4C."));
+            Assert.That(errorMessage, Is.EqualTo("'A' is not recognized as a card."));
         }
 
         [Test]
@@ -127,7 +137,7 @@ namespace patience.core.test
             var (card, errorMessage) = Card.Create("999C");
 
             Assert.That(card, Is.Null);
-            Assert.That(errorMessage, Is.EqualTo("'999C' is to long to be a card, you need to specify rank and suit, like 4C."));
+            Assert.That(errorMessage, Is.EqualTo("'999C' is not recognized as a card."));
         }
 
         [TestCase("2C", Suit.Clubs)]
@@ -151,7 +161,7 @@ namespace patience.core.test
             var (card, errorMessage) = Card.Create("2G");
 
             Assert.That(card, Is.Null);
-            Assert.That(errorMessage, Is.EqualTo("Suit 'G' is not recognized.  Allowed values are C,D,H,S."));
+            Assert.That(errorMessage, Is.EqualTo("'2G' is not recognized as a card."));
         }
         
         [TestCase("AC", 1)]
@@ -183,7 +193,7 @@ namespace patience.core.test
         {
             var (card, errorMessage) = Card.Create("11C");
 
-            Assert.That(errorMessage, Is.EqualTo("Rank '11' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K."));
+            Assert.That(errorMessage, Is.EqualTo("'11C' is not recognized as a card."));
         }
 
         #endregion

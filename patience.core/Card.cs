@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace patience.core
 {
@@ -52,80 +53,43 @@ namespace patience.core
             return $"{rankString}{suitChar}";
         }
 
-        public static (Card? card, string errorMessage) Create(string card)
+        private static Regex CardRegex = new Regex(@"^(A|1|2|3|4|5|6|7|8|9|10|J|Q|K)(C|D|H|S)$", RegexOptions.IgnoreCase);
+
+        public static (Card? card, string errorMessage) Create(string str)
         {
-            if (card.Length <= 1)
-                return (null, $"'{card}' is to short to be a card, you need to specify rank and suit, like 4C.");
-            if (card.Length > 3)
-                return (null, $"'{card}' is to long to be a card, you need to specify rank and suit, like 4C.");
+            var result = CardRegex.Match(str ?? "");
+            if (result.Success == false)
+                return (null, $"'{str}' is not recognized as a card.");
 
-            var suitChar = card[^1];
+            var rankString = result.Groups[1].Value;
+            var suitString = result.Groups[2].Value;
 
-            Suit suit;
-            switch (char.ToUpper(suitChar))
+            Suit suit = suitString.ToUpper() switch
             {
-                case 'C':
-                    suit = Suit.Clubs;
-                    break;
-                case 'D':
-                    suit = Suit.Diamonds;
-                    break;
-                case 'H':
-                    suit = Suit.Hearts;
-                    break;
-                case 'S':
-                    suit = Suit.Spades;
-                    break;
-                default:
-                    return (null, $"Suit '{suitChar}' is not recognized.  Allowed values are C,D,H,S.");
-            }
+                "C" => Suit.Clubs,
+                "D" => Suit.Diamonds,
+                "H" => Suit.Hearts,
+                "S" => Suit.Spades,
+                _ => throw new ArgumentOutOfRangeException($"'{suitString}' could not be parsed to a Suit.")
+            };
 
-            var rankString = card.Substring(0, card.Length - 1);
-            int rank;
-            switch (rankString.ToUpper())
+            int rank = rankString.ToUpper() switch
             {
-                case "A":
-                    rank = 1;
-                    break;
-                case "2":
-                    rank = 2;
-                    break;
-                case "3":
-                    rank = 3;
-                    break;
-                case "4":
-                    rank = 4;
-                    break;
-                case "5":
-                    rank = 5;
-                    break;
-                case "6":
-                    rank = 6;
-                    break;
-                case "7":
-                    rank = 7;
-                    break;
-                case "8":
-                    rank = 8;
-                    break;
-                case "9":
-                    rank = 9;
-                    break;
-                case "10":
-                    rank = 10;
-                    break;
-                case "J":
-                    rank = 11;
-                    break;
-                case "Q":
-                    rank = 12;
-                    break;
-                case "K":
-                    rank = 13;
-                    break;
-                default:
-                    return (null, $"Rank '{rankString}' is not recognized.  Allowed values are A,2,3,4,5,6,7,8,9,10,J,Q,K.");
-            }
+                "A" => 1,
+                "2" => 2,
+                "3" => 3,
+                "4" => 4,
+                "5" => 5,
+                "6" => 6,
+                "7" => 7,
+                "8" => 8,
+                "9" => 9,
+                "10" => 10,
+                "J" => 11,
+                "Q" => 12,
+                "K" => 13,
+                _ => throw new ArgumentOutOfRangeException($"'{rankString}' could not be parsed to a rank.")
+            };
 
             return (new Card(suit, rank), null);
         }
