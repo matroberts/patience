@@ -83,7 +83,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AD" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {}
+                    DiamondsStack = {}
                 }
             };
 
@@ -96,8 +96,8 @@ namespace patience.core.test
             Assert.That(errorMessage, Is.Null);
             var move = command as MoveCommand;
             Assert.That(move, Is.Not.Null);
-            // Assert.That(move.From, Is.EqualTo("Stock"));
-            // Assert.That(move.To, Is.EqualTo("DiamondsFoundation"));
+            Assert.That(move.From, Is.EqualTo("Stock"));
+            Assert.That(move.To, Is.EqualTo("DiamondsStack"));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AD" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {}
+                    DiamondsStack = {}
                 }
             };
 
@@ -132,7 +132,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AD" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {}
+                    DiamondsStack = {}
                 }
             };
 
@@ -146,13 +146,51 @@ namespace patience.core.test
             Assert.That(errorMessage, Is.EqualTo("'4D' is not available to be moved."));
         }
 
-        // card not available for move 
-        // card cannot be accepted on foundation
-        // from and too are same location....?
+        [Test]
+        public void A_FoundationMove_ResultsInAError_IfTheFoundationCannotAcceptTheCard()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
 
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, "F4D");
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Error));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo($"'4D' cannot be moved to the foundation."));
+        }
+
+        [Test]
+        public void A_FoundationMove_ResultsInAError_IfTheCardIsAlreadyTopOfTheFoundation()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = { "AD" }
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, "FAD");
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Error));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo($"'AD' cannot be moved to the foundation."));
+        }
 
         #endregion
-
-
     }
 }

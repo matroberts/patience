@@ -51,6 +51,11 @@ namespace patience.core
             return card;
         }
 
+        public bool CanAccept(Card card)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Give(Card card)
         {
             throw new NotImplementedException();

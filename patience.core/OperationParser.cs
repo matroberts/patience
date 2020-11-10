@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 
 namespace patience.core
 {
@@ -37,7 +36,11 @@ namespace patience.core
             if(from==null)
                 return (null, $"'{card}' is not available to be moved.");
 
-            return (new MoveCommand(), null);
+            var to = layout.CanFoundationAccept(card);
+            if (to == null)
+                return (null, $"'{card}' cannot be moved to the foundation.");
+
+            return (new MoveCommand(){From = from, To = to}, null);
         }
     }
 

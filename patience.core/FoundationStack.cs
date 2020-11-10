@@ -36,6 +36,13 @@ namespace patience.core
             throw new NotImplementedException();
         }
 
+        public bool CanAccept(Card card)
+        {
+            if (Suit != card.Suit)
+                return false;
+            return Cards.Count + 1 == card.Rank;
+        }
+
         public void Give(Card card)
         {
             if(card.Suit != Suit)

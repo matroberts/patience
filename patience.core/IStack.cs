@@ -5,6 +5,7 @@
         public string Name { get; }
         public bool IsAvailable(Card card);
         Card Take();
+        public bool CanAccept(Card card);
         void Give(Card card);
         void AssertInvariants();
 

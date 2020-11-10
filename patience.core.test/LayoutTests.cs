@@ -37,7 +37,7 @@ namespace patience.core.test
         {
             var layout = new Layout()
             {
-                Foundation = {ClubStack = {"AH"}}
+                Foundation = {ClubsStack = {"AH"}}
             };
 
             Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack contains the card 'AH' which does not match suit."));
@@ -48,7 +48,7 @@ namespace patience.core.test
         {
             var layout = new Layout()
             {
-                Foundation = { ClubStack = { "2C" } }
+                Foundation = { ClubsStack = { "2C" } }
             };
 
             Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack is not in rank order, ranks are '2'."));
@@ -59,7 +59,7 @@ namespace patience.core.test
         {
             var layout = new Layout()
             {
-                Foundation = { ClubStack = { "AC", "2C", "4C" } }
+                Foundation = { ClubsStack = { "AC", "2C", "4C" } }
             };
 
             Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - ClubsStack is not in rank order, ranks are '1, 2, 4'."));
@@ -68,10 +68,10 @@ namespace patience.core.test
         [Test]
         public void AssertInvariants_FoundationStack_AllFourStacksAreChecked()
         {
-            Assert.That(() => new Layout() { Foundation = { ClubStack = { "AD" } } }.AssertInvariants(), Throws.InvalidOperationException);
-            Assert.That(() => new Layout() { Foundation = { DiamondStack = { "AH" } } }.AssertInvariants(), Throws.InvalidOperationException);
-            Assert.That(() => new Layout() { Foundation = { HeartStack = { "AS" } } }.AssertInvariants(), Throws.InvalidOperationException);
-            Assert.That(() => new Layout() { Foundation = { SpadeStack = { "AC" } } }.AssertInvariants(), Throws.InvalidOperationException);
+            Assert.That(() => new Layout() { Foundation = { ClubsStack = { "AD" } } }.AssertInvariants(), Throws.InvalidOperationException);
+            Assert.That(() => new Layout() { Foundation = { DiamondsStack = { "AH" } } }.AssertInvariants(), Throws.InvalidOperationException);
+            Assert.That(() => new Layout() { Foundation = { HeartsStack = { "AS" } } }.AssertInvariants(), Throws.InvalidOperationException);
+            Assert.That(() => new Layout() { Foundation = { SpadesStack = { "AC" } } }.AssertInvariants(), Throws.InvalidOperationException);
         }
 
         #endregion
@@ -86,7 +86,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D"}, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -94,7 +94,7 @@ namespace patience.core.test
 
             Assert.That(layout.Stock.Cards, Is.Empty);
             Assert.That(layout.Stock.Position, Is.EqualTo(0));
-            Assert.That(layout.Foundation.DiamondStack, Is.EqualTo(new List<Card>{ "AD", "2D", "3D", "4D"}));
+            Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card>{ "AD", "2D", "3D", "4D"}));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -120,7 +120,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -135,7 +135,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D" }, Position = 0 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -150,7 +150,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4C" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -165,7 +165,7 @@ namespace patience.core.test
                 Stock = { Cards = { "5D" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -185,7 +185,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D" }, Position = 1 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -205,7 +205,7 @@ namespace patience.core.test
                 Stock = { Cards = { "4D" }, Position = 0 },
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -224,7 +224,7 @@ namespace patience.core.test
             {
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -243,12 +243,92 @@ namespace patience.core.test
             {
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D", "4D"}
+                    DiamondsStack = {"AD", "2D", "3D", "4D"}
                 }
             };
 
             // Act
             string stack = layout.IsAvailable("3D");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        #endregion
+
+        #region CanFoundationAccept
+
+        [Test]
+        public void CanFoundationAccept_ReturnsTheStackName_IfTheMatchingSuitStack_HasOneRankLower()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanFoundationAccept("4D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("DiamondsStack"));
+        }
+
+        [Test]
+        public void CanFoundationAccept_ReturnsTheStackName_IfTheStackIsEmpty_AndYouHaveAnAce()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
+
+            // Act
+            string stack = layout.CanFoundationAccept("AD");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("DiamondsStack"));
+        }
+
+        [Test]
+        public void CanFoundationAccept_ReturnsNull_IfTheSuitDoesNotMatch()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanFoundationAccept("4H");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        [Test]
+        public void CanFoundationAccept_ReturnsNull_IfTheRankIsNotNextInLine()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanFoundationAccept("5D");
 
             // Assert
             Assert.That(stack, Is.Null);

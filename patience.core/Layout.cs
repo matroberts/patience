@@ -47,23 +47,28 @@ namespace patience.core
         {
             return Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
         }
+
+        public string CanFoundationAccept(Card card)
+        {
+            return Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
+        }
     }
 
     public class Foundation
     {
-        public FoundationStack ClubStack { get; set; } = new FoundationStack(Suit.Clubs);
-        public FoundationStack DiamondStack { get; set; } = new FoundationStack(Suit.Diamonds);
-        public FoundationStack HeartStack { get; set; } = new FoundationStack(Suit.Hearts);
-        public FoundationStack SpadeStack { get; set; } = new FoundationStack(Suit.Spades);
+        public FoundationStack ClubsStack { get; set; } = new FoundationStack(Suit.Clubs);
+        public FoundationStack DiamondsStack { get; set; } = new FoundationStack(Suit.Diamonds);
+        public FoundationStack HeartsStack { get; set; } = new FoundationStack(Suit.Hearts);
+        public FoundationStack SpadesStack { get; set; } = new FoundationStack(Suit.Spades);
 
         public IEnumerable<FoundationStack> Stacks
         {
             get
             {
-                yield return ClubStack;
-                yield return DiamondStack;
-                yield return HeartStack;
-                yield return SpadeStack;
+                yield return ClubsStack;
+                yield return DiamondsStack;
+                yield return HeartsStack;
+                yield return SpadesStack;
             }
         }
     }

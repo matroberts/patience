@@ -172,7 +172,7 @@ D      Deal - turn over 3 cards from the stock"));
             {
                 Foundation =
                 {
-                    DiamondStack = {"AD", "2D", "3D"}
+                    DiamondsStack = {"AD", "2D", "3D"}
                 }
             };
 
@@ -190,10 +190,10 @@ D      Deal - turn over 3 cards from the stock"));
             {
                 Foundation =
                 {
-                    ClubStack = {"AC", "2C", "3C"},
-                    DiamondStack = {"AD", "2D"},
-                    HeartStack = {"AH"},
-                    SpadeStack = {"AS", "2S", "3S", "4S"},
+                    ClubsStack = {"AC", "2C", "3C"},
+                    DiamondsStack = {"AD", "2D"},
+                    HeartsStack = {"AH"},
+                    SpadesStack = {"AS", "2S", "3S", "4S"},
                 }
             };
 
