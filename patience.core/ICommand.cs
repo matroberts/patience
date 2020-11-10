@@ -25,7 +25,7 @@
         public string To { get; set; }
         public void Do(Layout layout)
         {
-            throw new System.NotImplementedException();
+            layout.Move(From, To);
         }
 
         public void Undo(Layout layout)

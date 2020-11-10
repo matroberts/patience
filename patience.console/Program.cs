@@ -12,7 +12,7 @@ namespace patience.console
 
             IKlondike klondike = new Klondike(new Layout()
             {
-                Stock = { Cards = { "AC", "2C", "3C", "4H", "5D", "6S", "7C" }, Position = 0 },
+                Stock = { Cards = { "3C", "2C", "AC", "4H", "5D", "6S", "7C" }, Position = 0 },
                 Foundation = { SpadesStack = {"AS", "2S"}}
             });
 

@@ -287,5 +287,52 @@ D      Deal - turn over 3 cards from the stock"));
         }
 
         #endregion
+
+        #region Foundation Tests
+
+        [Test]
+        public void Foundation_CanMoveAnAvailableAce_ToTheFoundation()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AS"}, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            var klondike = new Klondike(layout);
+
+            var result = klondike.Operate("FAS");
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.Empty);  
+            Assert.That(result.Layout.MoreStock, Is.False);
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"--", "3D", "--", "AS"}));
+        }
+
+        [Test]
+        public void Foundation_ReturnsAnError_IfTheMoveCannotBeMade()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "2S" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            var klondike = new Klondike(layout);
+
+            var result = klondike.Operate("F2S");
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Error));
+            Assert.That(result.Message, Is.EqualTo("'2S' cannot be moved to the foundation."));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2S" }));
+            Assert.That(result.Layout.MoreStock, Is.False);
+            Assert.That(result.Layout.Foundation, Is.EqualTo(new[] { "--", "3D", "--", "--" }));
+        }
+
+        #endregion
     }
 }
