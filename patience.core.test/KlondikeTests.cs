@@ -37,7 +37,7 @@ namespace patience.core.test
             // Assert
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Error));
             Assert.That(result.Message, Is.EqualTo("Operation 'NotAnOperation' is not understood."));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2C", "3C", "4C" }));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "2C", "3C", "4C" }));
         }
 
         #endregion
@@ -72,7 +72,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new []{"2C", "3C", "4C"}));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new []{"XX", "2C", "3C", "4C"}));
         }        
         
         [Test]
@@ -87,11 +87,11 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new []{"AC", "2C", "3C"}));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new []{"XX", "AC", "2C", "3C"}));
         }
 
         [Test]
-        public void Print_Stock_ShouldShow2Card_IfThePositionis2()
+        public void Print_Stock_ShouldShow2Card_IfThePositionIs2()
         {
             var layout = new Layout()
             {
@@ -102,7 +102,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "AC", "2C" }));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C" }));
         }
 
         [Test]
@@ -117,7 +117,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "AC" }));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "AC" }));
         }
 
         [Test]
@@ -132,7 +132,22 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.Empty);
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX" }));
+        }
+
+        [Test]
+        public void Print_Stock_ShouldShowEmptyPile_IfThePositionIsAtTheEndOfTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 5 } // 1-indexed !!
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "--", "3C", "4C", "5C" }));
         }
 
         [Test]
@@ -147,7 +162,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("H");
 
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.Empty);
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "--" }));
         }
 
         [Test]
@@ -214,77 +229,26 @@ D      Deal - turn over 3 cards from the stock"));
             // Arrange
             var layout = new Layout()
             {
-                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 0 } // 1-indexed !!
             };
             var klondike = new Klondike(layout);
 
             // Act/Assert
             var result1 = klondike.Operate("D");
             Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
-            Assert.That(result1.Layout.MoreStock, Is.True);
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C", "3C" }));
 
             // Act/Assert
             var result2 = klondike.Operate("D");
             Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "4C", "5C", "6C" }));
-            Assert.That(result1.Layout.MoreStock, Is.True);
-        }
-
-        [Test]
-        public void Deal_WhenADealPassesTheEndOfTheStock_TheEndOfTheStockIsShown()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
-            };
-
-            var klondike = new Klondike(layout);
-            var result = klondike.Operate("D");
-
-            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "5C", "6C", "7C" }));
-            Assert.That(result.Layout.MoreStock, Is.False);
-        }
-
-        [Test]
-        public void Deal_WhenDealHappensOnTheEndOfTheStock_YouGoBackToTheBeginningOfTheStock()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
-            };
-
-            var klondike = new Klondike(layout);
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "--", "2C", "3C", "4C" }));
 
             // Act/Assert
-            var result1 = klondike.Operate("D");
-            Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result1.Layout.Stock, Is.Empty);  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
-            Assert.That(result1.Layout.MoreStock, Is.True);
-
-            // Act/Assert
-            var result2 = klondike.Operate("D");
-            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "AC", "2C", "3C" }));
-            Assert.That(result1.Layout.MoreStock, Is.True);
+            var result3 = klondike.Operate("D");
+            Assert.That(result3.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result3.Layout.Stock, Is.EqualTo(new[] { "XX" }));
         }
 
-        [Test]
-        public void Deal_WorkCorrectly_WhenTheStockIsEmpty()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { }, Position = 0 } // last position
-            };
-
-            var klondike = new Klondike(layout);
-
-            var result1 = klondike.Operate("D");
-            Assert.That(result1.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result1.Layout.Stock, Is.Empty);  // Note that you are back at position=0 here, and no cards are shown....effectively this the stock being reset
-            Assert.That(result1.Layout.MoreStock, Is.False);
-        }
 
         #endregion
 
@@ -306,8 +270,7 @@ D      Deal - turn over 3 cards from the stock"));
 
             var result = klondike.Operate("FAS");
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.Empty);  
-            Assert.That(result.Layout.MoreStock, Is.False);
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] {"--"}));  
             Assert.That(result.Layout.Foundation, Is.EqualTo(new []{"--", "3D", "--", "AS"}));
         }
 
@@ -328,8 +291,7 @@ D      Deal - turn over 3 cards from the stock"));
             var result = klondike.Operate("F2S");
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Error));
             Assert.That(result.Message, Is.EqualTo("'2S' cannot be moved to the foundation."));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "2S" }));
-            Assert.That(result.Layout.MoreStock, Is.False);
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "--", "2S" }));
             Assert.That(result.Layout.Foundation, Is.EqualTo(new[] { "--", "3D", "--", "--" }));
         }
 

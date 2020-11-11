@@ -80,12 +80,18 @@ namespace patience.core
             return new ApiLayout()
             {
                 Stock = layout.Stock.ToApiStock(),
-                MoreStock = layout.Stock.MoreStock,
                 Foundation = layout.Foundation.ToApiFoundation(),
             };
         }
 
-        public static List<string> ToApiStock(this Stock stock) => stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()).ToList();
+        public static List<string> ToApiStock(this Stock stock)
+        {
+            var list = new List<string>();
+            list.Add(stock.MoreStock ? "XX" : "--");
+            list.AddRange(stock.Cards.Where((c, i) => i + 3 == stock.Position || i + 2 == stock.Position || i + 1 == stock.Position).Select(c => c.ToString()));
+            return list;
+        }
+
         public static List<string> ToApiFoundation(this Foundation foundation) => foundation.Stacks.Select(stack => stack.Cards.Any() ? stack.Cards.Last().ToString() : "--").ToList();
     }
 }

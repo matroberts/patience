@@ -76,6 +76,73 @@ namespace patience.core.test
 
         #endregion
 
+        #region Deal
+
+        [Test]
+        public void Deal_TheStock_ShouldAdvanceThreeCards()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+            };
+
+            // Act/Assert
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(3));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+
+            // Act/Assert
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(6));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+        }
+
+        [Test]
+        public void Deal_WhenADealPassesTheEndOfTheStock_ThePositionIsAdvancedToTheEnd()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
+            };
+
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(7));
+            Assert.That(layout.Stock.MoreStock, Is.False);
+        }
+
+        [Test]
+        public void Deal_WhenDealHappensOnTheEndOfTheStock_YouGoBackToTheBeginningOfTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+            };
+
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(3));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+        }
+
+        [Test]
+        public void Deal_WorkCorrectly_WhenTheStockIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 } // last position
+            };
+
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Stock.MoreStock, Is.False);
+        }
+
+        #endregion
+
         #region Move
 
         [Test]

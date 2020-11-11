@@ -16,7 +16,6 @@ namespace patience.console
         public static void Render(this ApiLayout layout)
         {
             Console.ForegroundColor = ConsoleColor.Black;
-            Console.Write(layout.MoreStock ? "XX " : "-- ");
             foreach (var stockCard in layout.Stock)
             {
                 stockCard.Render();
