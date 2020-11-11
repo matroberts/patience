@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using patience.core;
 
 namespace patience.console
@@ -9,6 +10,10 @@ namespace patience.console
         {
             Console.CancelKeyPress += (sender, eventArgs) => Exit();
             Console.BackgroundColor = ConsoleColor.White;
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.Title = "Patience";
+            Console.BufferHeight = Console.WindowHeight;
+            Console.BufferWidth = Console.BufferWidth;
 
             IKlondike klondike = new Klondike(new Layout()
             {
@@ -22,7 +27,7 @@ namespace patience.console
             {
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.WriteLine();
-                Console.Write("Patience> ");
+                Console.Write("> ");
                 var operation = Console.ReadLine();
                 Console.Clear();
 
