@@ -38,10 +38,6 @@ namespace patience.core
 
         public void Step(int from, int to) => Stock.Step(from, to);
 
-        public void Deal() => Stock.Deal();
-
-        public void UnDeal() => Stock.UnDeal();
-
         public void Move(string from, string to)
         {
             var fromStack = Stacks.FirstOrDefault(s => s.Name == from);

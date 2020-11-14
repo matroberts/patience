@@ -5,6 +5,8 @@ namespace patience.core
 {
     public class Stock : IStack
     {
+        public string Name => "Stock";
+
         public List<Card> Cards { get; } = new List<Card>();
         /// <summary>
         /// Stock position is 1-indexed.  A zero indicates that no cards have been flipped yet.
@@ -45,26 +47,6 @@ namespace patience.core
             Position = to;
         }
 
-        public void Deal()
-        {
-            if (Position == Cards.Count)
-                Position = 0;
-            else
-                Position += 3;
-
-            if (Position > Cards.Count)
-                Position = Cards.Count;
-        }
-
-        public void UnDeal()
-        {
-            if (Position == 0)
-                Position = Cards.Count;
-            else
-                Position -= 3;
-        }
-
-        public string Name => "Stock";
         public bool IsAvailable(Card card)
         {
             if (Position <= 0)
@@ -92,8 +74,5 @@ namespace patience.core
         {
             throw new NotImplementedException();
         }
-
-
-
     }
 }
