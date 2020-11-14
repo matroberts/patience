@@ -57,7 +57,10 @@ namespace patience.core.test
         public void An_D_IsTheDealOperation(string opString)
         {
             // Arrange
-            var layout = new Layout();
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 4 } // 1-indexed !!
+            };
 
             // Act
             var parser = new OperationParser();
@@ -65,8 +68,11 @@ namespace patience.core.test
 
             // Assert
             Assert.That(act, Is.EqualTo(Act.Do));
-            Assert.That(command, Is.TypeOf<DealCommand>());
             Assert.That(errorMessage, Is.Null);
+
+            var deal = command as DealCommand;
+            Assert.That(deal.From, Is.EqualTo(4));
+            Assert.That(deal.To, Is.EqualTo(0));
         }
 
         #endregion

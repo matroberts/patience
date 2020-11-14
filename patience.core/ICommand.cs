@@ -8,9 +8,11 @@
 
     public class DealCommand : ICommand
     {
+        public int From { get; set; }
+        public int To { get; set; }
         public void Do(Layout layout)
         {
-            layout.Deal();
+            layout.Step(From, To);
         }
 
         public void Undo(Layout layout)

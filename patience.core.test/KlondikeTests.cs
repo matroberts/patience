@@ -247,8 +247,25 @@ D      Deal - turn over 3 cards from the stock"));
             var result3 = klondike.Operate("D");
             Assert.That(result3.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result3.Layout.Stock, Is.EqualTo(new[] { "XX" }));
+
+            // Act/Assert
+            var result4 = klondike.Operate("D");
+            Assert.That(result4.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result4.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C", "3C" }));
         }
 
+        [Test]
+        public void Deal_WorkCorrectly_WhenTheStockIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 } // last position
+            };
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("D");
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "--" }));
+        }
 
         #endregion
 

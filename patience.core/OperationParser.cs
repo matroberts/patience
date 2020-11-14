@@ -9,7 +9,9 @@ namespace patience.core
             if (apiOperation.StartsWith("H", StringComparison.OrdinalIgnoreCase))
                 return (Act.Help, null, null);
             else if (apiOperation.StartsWith("D", StringComparison.OrdinalIgnoreCase))
-                return (Act.Do, new DealCommand(), null);
+            {
+                return (Act.Do, MakeDeal(layout), null);
+            }
             else if (apiOperation.StartsWith("F", StringComparison.OrdinalIgnoreCase))
             {
                 var (command, errorMessage) = MakeMove(layout, apiOperation);
@@ -20,6 +22,12 @@ namespace patience.core
             }
             else
                 return (Act.Error, null, $"Operation '{apiOperation}' is not understood.");
+        }
+
+        private DealCommand MakeDeal(Layout layout)
+        {
+            var (from, to) = layout.Measure();
+            return new DealCommand(){From = from, To = to};
         }
 
         private (MoveCommand command, string errorMessage) MakeMove(Layout layout, string apiOperation)
