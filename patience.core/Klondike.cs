@@ -48,8 +48,11 @@ namespace patience.core
         }
 
         private readonly string helpMessage = @"
-Ctrl+C Exit
-H      Help
-D      Deal - turn over 3 cards from the stock";
+Ctrl+C  Exit
+H       Help
+D       Deal - turn over 3 cards from the stock
+U       Undo
+F<card> Move the <card> to the Foundation
+<card>  Examples: AC, 3D, JH, KS";
     }
 }

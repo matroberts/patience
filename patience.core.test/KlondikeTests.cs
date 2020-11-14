@@ -42,7 +42,7 @@ namespace patience.core.test
 
         #endregion
 
-        #region Help Tests - Help also just returns the state of the layout, so can use it for testing layout mapping
+        #region Help and Display Tests - Help also just returns the state of the layout, so can use it for testing layout mapping
 
         [Test]
         public void Help_ReturnsHelpInfo_InTheMessage()
@@ -55,9 +55,12 @@ namespace patience.core.test
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout, Is.Not.Null);
             Assert.That(result.Message, Is.EqualTo(@"
-Ctrl+C Exit
-H      Help
-D      Deal - turn over 3 cards from the stock"));
+Ctrl+C  Exit
+H       Help
+D       Deal - turn over 3 cards from the stock
+U       Undo
+F<card> Move the <card> to the Foundation
+<card>  Examples: AC, 3D, JH, KS"));
         }
 
         [Test]
@@ -269,7 +272,7 @@ D      Deal - turn over 3 cards from the stock"));
 
         #endregion
 
-        #region Foundation Tests
+        #region Foundation Move Tests
 
         [Test]
         public void Foundation_CanMoveAnAvailableAce_ToTheFoundation()
