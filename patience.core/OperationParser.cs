@@ -8,6 +8,10 @@ namespace patience.core
         {
             if (apiOperation.StartsWith("H", StringComparison.OrdinalIgnoreCase))
                 return (Act.Help, null, null);
+            else if (apiOperation.StartsWith("U", StringComparison.OrdinalIgnoreCase))
+            {
+                return (Act.Undo, null, null);
+            }
             else if (apiOperation.StartsWith("D", StringComparison.OrdinalIgnoreCase))
             {
                 return (Act.Do, MakeDeal(layout), null);

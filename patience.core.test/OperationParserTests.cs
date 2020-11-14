@@ -27,7 +27,7 @@ namespace patience.core.test
 
         #endregion
 
-        #region Help
+        #region H - Help
 
         [TestCase("H")]
         [TestCase("h")]
@@ -49,7 +49,7 @@ namespace patience.core.test
 
         #endregion
 
-        #region Deal
+        #region D - Deal
 
         [TestCase("D")]
         [TestCase("d")]
@@ -195,6 +195,31 @@ namespace patience.core.test
             Assert.That(act, Is.EqualTo(Act.Error));
             Assert.That(command, Is.Null);
             Assert.That(errorMessage, Is.EqualTo($"'AD' cannot be moved to the foundation."));
+        }
+
+        #endregion
+
+        #region U - Undo
+
+        [TestCase("U")]
+        [TestCase("u")]
+        [TestCase("undo")]
+        public void An_U_IsTheUndoOperation(string opString)
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 4 } // 1-indexed !!
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, opString);
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Undo));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.Null);
         }
 
         #endregion

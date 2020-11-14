@@ -313,5 +313,63 @@ D      Deal - turn over 3 cards from the stock"));
         }
 
         #endregion
+
+        #region Undo
+
+        [Test]
+        public void Undo_Deal_ShouldReverseDealCommands()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 3 } // 1-indexed !!
+            };
+            var klondike = new Klondike(layout);
+            var result1 = klondike.Operate("D");
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "--", "2C", "3C", "4C" }));  
+
+            // Act/Assert
+            var result2 = klondike.Operate("U");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok), ()=> result2.Message);
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C", "3C" }));
+        }
+
+        [Test]
+        public void Undo_Deal_ShouldReverseDealCommands_ThisTestResultsInTheSamePositionAsThePreviousTestAtTheHalfwayPoint_ButUndoRemembersWhereYouCameFrom_AndSoGoesBackToTheCorrectPlace()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 2 } // 1-indexed !!
+            };
+            var klondike = new Klondike(layout);
+            var result1 = klondike.Operate("D");
+            Assert.That(result1.Layout.Stock, Is.EqualTo(new[] { "--", "2C", "3C", "4C" }));
+
+            // Act/Assert
+            var result2 = klondike.Operate("U");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok), () => result2.Message);
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C" }));
+        }
+
+        [Test]
+        public void Undo_ShouldNotError_IfThereAreNoCommandsToUndo_AndStateShouldRemainUnchanged()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 2 } // 1-indexed !!
+            };
+            var klondike = new Klondike(layout);
+
+            // Act
+            var result = klondike.Operate("U");
+
+            // Assert
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C" }));
+        }
+
+        #endregion
     }
 }

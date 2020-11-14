@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace patience.core
 {
@@ -6,6 +7,7 @@ namespace patience.core
     {
         private readonly Layout layout;
         private readonly OperationParser parser;
+        private readonly Stack<ICommand> history = new Stack<ICommand>();
 
         public Klondike(Layout layout)
         {
@@ -25,10 +27,13 @@ namespace patience.core
                 case Act.Help:
                     return new ApiResult() { Message = helpMessage, Status = ApiStatus.Ok, Layout = layout.ToApiLayout() };
                 case Act.Do:
+                    history.Push(command);
                     command.Do(layout);
                     break;
                 case Act.Undo:
-                    throw new NotImplementedException();
+                    if(history.Count > 0)
+                        history.Pop().Undo(layout);
+                    break;
                 case Act.Redo:
                     throw new NotImplementedException();
                 default:

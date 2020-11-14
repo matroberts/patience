@@ -17,7 +17,7 @@
 
         public void Undo(Layout layout)
         {
-            throw new System.NotImplementedException();
+            layout.Step(To, From);
         }
     }
 
