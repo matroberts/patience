@@ -27,12 +27,11 @@ namespace patience.core
             }
         }
 
-
         /// <summary>
         /// Measure and Step
         /// To support undo, when you deal the deck you need to record the before and after position of the stock
         /// That way un-deal can just be the reverse of the positions
-        /// Un-deal is not simply Position-=3 because at the end of the deck you could have come from three possible positions
+        /// Un-deal is not simply Position-=3 because at the end of the deck you could have come from one of three possible positions
         /// </summary>
         public (int from, int to) Measure() => Stock.Measure();
 
@@ -52,15 +51,9 @@ namespace patience.core
             toStack.Give(card);
         }
 
-        public string IsAvailable(Card card)
-        {
-            return Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
-        }
+        public string IsAvailable(Card card) => Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
 
-        public string CanFoundationAccept(Card card)
-        {
-            return Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
-        }
+        public string CanFoundationAccept(Card card) => Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
     }
 
     public class Foundation

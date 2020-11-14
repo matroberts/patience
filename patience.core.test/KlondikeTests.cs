@@ -317,6 +317,24 @@ D      Deal - turn over 3 cards from the stock"));
         #region Undo
 
         [Test]
+        public void Undo_ShouldNotError_IfThereAreNoCommandsToUndo_AndStateShouldRemainUnchanged()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 2 } // 1-indexed !!
+            };
+            var klondike = new Klondike(layout);
+
+            // Act
+            var result = klondike.Operate("U");
+
+            // Assert
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C" }));
+        }
+
+        [Test]
         public void Undo_Deal_ShouldReverseDealCommands()
         {
             // Arrange
@@ -353,21 +371,26 @@ D      Deal - turn over 3 cards from the stock"));
         }
 
         [Test]
-        public void Undo_ShouldNotError_IfThereAreNoCommandsToUndo_AndStateShouldRemainUnchanged()
+        public void Undo_Foundation_ShouldReverseAMoveOfAnAce_ToTheFoundation()
         {
-            // Arrange
             var layout = new Layout()
             {
-                Stock = { Cards = { "AC", "2C", "3C", "4C" }, Position = 2 } // 1-indexed !!
+                Stock = { Cards = { "AS" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
             };
+
             var klondike = new Klondike(layout);
-
-            // Act
-            var result = klondike.Operate("U");
-
-            // Assert
+            var result = klondike.Operate("FAS");
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
-            Assert.That(result.Layout.Stock, Is.EqualTo(new[] { "XX", "AC", "2C" }));
+
+            //Act
+            var result2 = klondike.Operate("U");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "--", "AS" }));
+            Assert.That(result2.Layout.Foundation, Is.EqualTo(new[] { "--", "3D", "--", "--" }));
         }
 
         #endregion

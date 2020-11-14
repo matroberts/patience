@@ -72,7 +72,8 @@ namespace patience.core
 
         public void Give(Card card)
         {
-            throw new NotImplementedException();
+            Cards.Insert(Position, card);
+            Position++;
         }
     }
 }

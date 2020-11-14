@@ -7,13 +7,15 @@ namespace patience.core
 {
     public class FoundationStack : IEnumerable<Card>, IStack
     {
+        public string Name => $"{this.Suit}Stack";
+
         public FoundationStack(Suit suit) => Suit = suit;
         public Suit Suit { get; }
         public List<Card> Cards { get; set; } = new List<Card>();
         public IEnumerator<Card> GetEnumerator() => Cards.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         public void Add(Card card) => Cards.Add(card);
-        
+
         public void AssertInvariants()
         {
             if (Cards.Any(c => c.Suit != Suit))
@@ -21,8 +23,6 @@ namespace patience.core
             if (Cards.Where( (c, i) => c.Rank != i+1).Any())
                 throw new InvalidOperationException($"Invariant Violation - {Name} is not in rank order, ranks are '{string.Join(", ", Cards.Select(c => c.Rank.ToString()))}'.");
         }
-
-        public string Name => $"{this.Suit}Stack";
 
         public bool IsAvailable(Card card)
         {
@@ -33,7 +33,12 @@ namespace patience.core
 
         public Card Take()
         {
-            throw new NotImplementedException();
+            if (Cards.Count == 0)
+                throw new ArgumentException($"The {Name} has no card to take.");
+
+            var card = Cards[^1];
+            Cards.RemoveAt(Cards.Count-1);
+            return card;
         }
 
         public bool CanAccept(Card card)
