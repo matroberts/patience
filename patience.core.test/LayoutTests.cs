@@ -76,6 +76,121 @@ namespace patience.core.test
 
         #endregion
 
+        #region Measure and Step - together make deal and un-deal
+
+        [Test]
+        public void Measure_TheStock_ShouldGiveThePositionIfYouAdvanceThreeThreeCards()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+            };
+
+            // Act/Assert
+            var (from, to) = layout.Measure();
+            Assert.That(from, Is.EqualTo(0));
+            Assert.That(to, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Measure_WhenADealWillPassTheEndOfTheStock_TheMeasureReturnsTheEndOfTheStockAsThePosition()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
+            };
+
+            // Act/Assert
+            var (from, to) = layout.Measure();
+            Assert.That(from, Is.EqualTo(6));
+            Assert.That(to, Is.EqualTo(7));
+        }
+
+        [Test]
+        public void Measure_WhenDealHappensOnTheEndOfTheStock_TheMeasureReturnsTheBeginningOfTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+            };
+
+            // Act/Assert
+            var (from, to) = layout.Measure();
+            Assert.That(from, Is.EqualTo(7));
+            Assert.That(to, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Measure_WorkCorrectly_WhenTheStockIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 } // last position
+            };
+
+            // Act/Assert
+            var (from, to) = layout.Measure();
+            Assert.That(from, Is.EqualTo(0));
+            Assert.That(to, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void Step_ChangesTheStockPosition_ToTheToPosition()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 }
+            };
+
+            layout.Step(6, 7);
+            Assert.That(layout.Stock.Position, Is.EqualTo(7));
+            Assert.That(layout.Stock.MoreStock, Is.False);
+
+            layout.Step(7, 0);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+
+            layout.Step(0, 3);
+            Assert.That(layout.Stock.Position, Is.EqualTo(3));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+        }
+
+        [Test]
+        public void Step_IfTheFromPosition_IsNotTheCurrentPosition_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 }
+            };
+
+            Assert.That(() => layout.Step(7, 0), Throws.ArgumentException.With.Message.EqualTo("Cannot Step from '7' since the current position is '6'"));
+        }
+
+        [Test]
+        public void Step_IfTheToPosition_IsLessThanZero_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 }
+            };
+
+            Assert.That(() => layout.Step(7, -1), Throws.ArgumentException.With.Message.EqualTo("Cannot Step to '-1' since it is before the beginning of the stock."));
+        }
+
+        [Test]
+        public void Step_IfTheToPosition_IsGreaterThanTheStockLength_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 }
+            };
+
+            Assert.That(() => layout.Step(6, 8), Throws.ArgumentException.With.Message.EqualTo("Cannot Step to '8' since it is past the end of the stock."));
+        }
+
+        #endregion
+
         #region Deal
 
         [Test]
@@ -140,6 +255,96 @@ namespace patience.core.test
             Assert.That(layout.Stock.Position, Is.EqualTo(0));
             Assert.That(layout.Stock.MoreStock, Is.False);
         }
+
+        #endregion
+
+        #region UnDeal - Should do the opposite of deal
+
+        [Test]
+        public void UnDeal_TheStock_ShouldRetreatThreeCards()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+            };
+
+            Assert.That(layout.Stock.MoreStock, Is.True);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+
+            layout.Deal();
+
+            Assert.That(layout.Stock.MoreStock, Is.True);
+            Assert.That(layout.Stock.Position, Is.EqualTo(3));
+
+            layout.UnDeal();
+
+            Assert.That(layout.Stock.MoreStock, Is.True);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void UnDeal_WhenUnDealHappensAtTheBeginningOfTheStock_YouGoBackToTheEndOfTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 } // last position
+            };
+
+            Assert.That(layout.Stock.MoreStock, Is.False);
+            Assert.That(layout.Stock.Position, Is.EqualTo(7));
+
+            layout.Deal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Stock.MoreStock, Is.True);
+
+            layout.UnDeal();
+            Assert.That(layout.Stock.Position, Is.EqualTo(7));
+            Assert.That(layout.Stock.MoreStock, Is.False);
+        }
+
+        // [Test]
+        // public void UnDeal_WhenUnDealHappensAtTheEndOfTheStock_YouGoBackMinimumNumberOfCardsWhichMakesYouPositionAMultipleOfThree_Ouch()
+        // {
+        //     var layout = new Layout()
+        //     {
+        //         Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 } // deal will send you past the end of the stock
+        //     };
+        //
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(6));
+        //     Assert.That(layout.Stock.MoreStock, Is.True);
+        //
+        //     layout.Deal();
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(7));
+        //     Assert.That(layout.Stock.MoreStock, Is.False);
+        //
+        //     layout.UnDeal();
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(6));
+        //     Assert.That(layout.Stock.MoreStock, Is.True);
+        // }
+
+        // [Test]
+        // public void UnDeal_WhenUnDealHappensAtTheEndOfTheStock_YouGoBackMinimumNumberOfCardsWhichMakesYouPositionAMultipleOfThree_Ouch()
+        // {
+        //     var layout = new Layout()
+        //     {
+        //         Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C", "8C" }, Position = 6 } // deal will send you past the end of the stock
+        //     };
+        //
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(6));
+        //     Assert.That(layout.Stock.MoreStock, Is.True);
+        //
+        //     layout.Deal();
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(7));
+        //     Assert.That(layout.Stock.MoreStock, Is.False);
+        //
+        //     layout.UnDeal();
+        //     Assert.That(layout.Stock.Position, Is.EqualTo(6));
+        //     Assert.That(layout.Stock.MoreStock, Is.True);
+        // }
+
+        // Need to also test the case when exact multple of 3
+        // What about an undeal if you were at position 2? - are these positions just illegal? - infact aran't all the position
 
         #endregion
 

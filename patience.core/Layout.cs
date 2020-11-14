@@ -27,7 +27,20 @@ namespace patience.core
             }
         }
 
+
+        /// <summary>
+        /// Measure and Step
+        /// To support undo, when you deal the deck you need to record the before and after position of the stock
+        /// That way un-deal can just be the reverse of the positions
+        /// Un-deal is not simply Position-=3 because at the end of the deck you could have come from three possible positions
+        /// </summary>
+        public (int from, int to) Measure() => Stock.Measure();
+
+        public void Step(int from, int to) => Stock.Step(from, to);
+
         public void Deal() => Stock.Deal();
+
+        public void UnDeal() => Stock.UnDeal();
 
         public void Move(string from, string to)
         {

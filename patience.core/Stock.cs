@@ -21,6 +21,30 @@ namespace patience.core
                 throw new InvalidOperationException($"Invariant Violation - Stock Position {Position} is greater than the stock count {Cards.Count}.");
         }
 
+        public (int from, int to) Measure()
+        {
+            int newPosition;
+            if (Position == Cards.Count)
+                newPosition = 0;
+            else
+                newPosition = Position+3;
+
+            if (newPosition > Cards.Count)
+                newPosition = Cards.Count;
+            return (Position, newPosition);
+        }
+
+        public void Step(in int from, in int to)
+        {
+            if(from != Position)
+                throw new ArgumentException($"Cannot Step from '{from}' since the current position is '{Position}'");
+            if(to < 0)
+                throw new ArgumentException($"Cannot Step to '{to}' since it is before the beginning of the stock.");
+            if(to > Cards.Count)
+                throw new ArgumentException($"Cannot Step to '{to}' since it is past the end of the stock.");
+            Position = to;
+        }
+
         public void Deal()
         {
             if (Position == Cards.Count)
@@ -30,6 +54,14 @@ namespace patience.core
 
             if (Position > Cards.Count)
                 Position = Cards.Count;
+        }
+
+        public void UnDeal()
+        {
+            if (Position == 0)
+                Position = Cards.Count;
+            else
+                Position -= 3;
         }
 
         public string Name => "Stock";
@@ -60,5 +92,8 @@ namespace patience.core
         {
             throw new NotImplementedException();
         }
+
+
+
     }
 }
