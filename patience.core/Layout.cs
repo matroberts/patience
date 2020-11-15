@@ -8,6 +8,7 @@ namespace patience.core
     {
         public Stock Stock { get; } = new Stock();
         public Foundation Foundation { get; set; } = new Foundation();
+        public Tableau Tableau { get; set; } = new Tableau();
 
         public IEnumerable<IStack> Stacks
         {
@@ -16,6 +17,7 @@ namespace patience.core
                 yield return Stock;
                 foreach (var stack in Foundation.Stacks)
                     yield return stack;
+
             }
         }
 
@@ -25,6 +27,9 @@ namespace patience.core
             {
                 stack.AssertInvariants();
             }
+
+            foreach (var stack in Tableau.Stacks)
+                stack.AssertInvariants();
         }
 
         /// <summary>
@@ -71,6 +76,31 @@ namespace patience.core
                 yield return DiamondsStack;
                 yield return HeartsStack;
                 yield return SpadesStack;
+            }
+        }
+    }
+
+    public class Tableau
+    {
+        public TableauStack T1Stack { get; set; } = new TableauStack("T1");
+        public TableauStack T2Stack { get; set; } = new TableauStack("T2");
+        public TableauStack T3Stack { get; set; } = new TableauStack("T3");
+        public TableauStack T4Stack { get; set; } = new TableauStack("T4");
+        public TableauStack T5Stack { get; set; } = new TableauStack("T5");
+        public TableauStack T6Stack { get; set; } = new TableauStack("T6");
+        public TableauStack T7Stack { get; set; } = new TableauStack("T7");
+
+        public IEnumerable<TableauStack> Stacks
+        {
+            get
+            {
+                yield return T1Stack;
+                yield return T2Stack;
+                yield return T3Stack;
+                yield return T4Stack;
+                yield return T5Stack;
+                yield return T6Stack;
+                yield return T7Stack;
             }
         }
     }

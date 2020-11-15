@@ -74,6 +74,28 @@ namespace patience.core.test
             Assert.That(() => new Layout() { Foundation = { SpadesStack = { "AC" } } }.AssertInvariants(), Throws.InvalidOperationException);
         }
 
+        [Test]
+        public void AssertInvariants_Tableau_BeforeTheFlippedCard_TheCardsCanBeInAnyOrder()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "2H" }, FlippedAt = 5 }} // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.Nothing);
+        }
+
+        [Test]
+        public void AssertInvariants_Tableau_AfterTheFlippedCard_CardsMustBeInDescendingRankOrder()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "2H" }, FlippedAt = 4 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped cards are not in descending order.  Flipped cards are: 4C, 2H."));
+        }
+
         #endregion
 
         #region Measure and Step - together make deal and un-deal
@@ -250,8 +272,6 @@ namespace patience.core.test
             Assert.That(layout.Stock.Position, Is.EqualTo(3));
             Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
         }
-
-
 
         [Test]
         public void Move_ThrowsException_IfTheFromStackDoesNotExist()
@@ -506,5 +526,7 @@ namespace patience.core.test
         }
 
         #endregion
+
+
     }
 }
