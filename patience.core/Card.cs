@@ -11,6 +11,12 @@ namespace patience.core
         Spades
     }
 
+    public enum Color
+    {
+        Red,
+        Black
+    }
+
     public struct Card
     {
         public Card(Suit suit, int rank)
@@ -22,6 +28,16 @@ namespace patience.core
         }
         public Suit Suit;
         public int Rank;
+
+        public Color Color =>
+            Suit switch
+            {
+                Suit.Clubs => Color.Black,
+                Suit.Diamonds => Color.Red,
+                Suit.Hearts => Color.Red,
+                Suit.Spades => Color.Black,
+                _ => throw new ArgumentOutOfRangeException($"'{Suit}' could not be parsed to a Color.")
+            };
 
         public static implicit operator Card(string card)
         {
@@ -97,7 +113,5 @@ namespace patience.core
 
             return (new Card(suit, rank), null);
         }
-
-
     }
 }

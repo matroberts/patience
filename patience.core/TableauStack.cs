@@ -30,6 +30,8 @@ namespace patience.core
             {
                 if (first.Rank != second.Rank+1)
                     throw new InvalidOperationException($"Invariant Violation - T1Stack flipped cards are not in descending order.  Flipped cards are: {string.Join(", ", FlippedCards.Select(c => c.ToString()))}.");
+                if (first.Color == second.Color)
+                    throw new InvalidOperationException($"Invariant Violation - T1Stack flipped cards are not alternating color.  Flipped cards are: {string.Join(", ", FlippedCards.Select(c => c.ToString()))}.");
             }
         }
 

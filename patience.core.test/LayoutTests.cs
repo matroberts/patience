@@ -75,6 +75,17 @@ namespace patience.core.test
         }
 
         [Test]
+        public void AssertInvariants_Tableau_AfterFlip_CardMustDescendInRankAndAlternateColor()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "7C", "6H", "5S", "4D", "3C" }, FlippedAt = 1 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.Nothing);
+        }
+
+        [Test]
         public void AssertInvariants_Tableau_BeforeTheFlippedCard_TheCardsCanBeInAnyOrder()
         {
             var layout = new Layout()
@@ -86,7 +97,7 @@ namespace patience.core.test
         }
 
         [Test]
-        public void AssertInvariants_Tableau_AfterTheFlippedCard_CardsMustBeInDescendingRankOrder()
+        public void AssertInvariants_Tableau_AfterTheFlippedCard_IfCardsNotInDescendingRankOrder_AnExceptionIsThrown()
         {
             var layout = new Layout()
             {
@@ -94,6 +105,17 @@ namespace patience.core.test
             };
 
             Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped cards are not in descending order.  Flipped cards are: 4C, 2H."));
+        }
+
+        [Test]
+        public void AssertInvariants_Tableau_AfterTheFlippedCard_IfCardsNotAlternatingColor_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 4 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped cards are not alternating color.  Flipped cards are: 4C, 3S."));
         }
 
         #endregion

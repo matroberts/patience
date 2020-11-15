@@ -53,7 +53,21 @@ namespace patience.core.test
 
         #endregion
 
-        #region implicit cast from string
+        #region Color
+
+        [TestCase("2C", Color.Black)]
+        [TestCase("2D", Color.Red)]
+        [TestCase("2H", Color.Red)]
+        [TestCase("2S", Color.Black)]
+        public void Color_ReturnsTheCorrectColor_ForACard(string str, Color color)
+        {
+            Card card = str;
+            Assert.That(card.Color, Is.EqualTo(color));
+        }
+
+        #endregion
+
+        #region Implicit cast from string
 
         [Test]
         public void ImplicitCast_WillThrow_IfTheStringTooShort()
