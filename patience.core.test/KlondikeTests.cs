@@ -222,6 +222,66 @@ F<card> Move the <card> to the Foundation
             Assert.That(result.Layout.Foundation, Is.EqualTo(new[] { "3C", "2D", "AH", "4S" }));
         }
 
+        [Test]
+        public void Print_Tableau_ShouldShowDashes_IfTheTableauStackIsEmpty_AndShowAllTheStacks()
+        {
+            var layout = new Layout()
+            {
+                Tableau = 
+                {
+                    T1Stack = {},
+                }
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Tableau["T1Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T3Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T4Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T5Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T6Stack"], Is.EqualTo(new[] { "--" }));
+            Assert.That(result.Layout.Tableau["T7Stack"], Is.EqualTo(new[] { "--" }));
+        }
+
+        [Test]
+        public void Print_Tableau_ShouldShow_AllTheFlippedCards()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = {Cards = { "KH", "QC", "JD", "10S" }, FlippedAt = 1},
+                }
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Tableau["T1Stack"], Is.EqualTo(new[] { "KH", "QC", "JD", "10S" }));
+        }
+
+        [Test]
+        public void Print_Tableau_ShouldShow_XXForNonFlippedCards()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = {Cards = { "AC", "2C", "3C", "10S" }, FlippedAt = 4},
+                }
+            };
+
+            var klondike = new Klondike(layout);
+            var result = klondike.Operate("H");
+
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Tableau["T1Stack"], Is.EqualTo(new[] { "XX", "XX", "XX", "10S" }));
+        }
+
         #endregion
 
         #region DealTests

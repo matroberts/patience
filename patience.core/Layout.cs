@@ -113,6 +113,7 @@ namespace patience.core
             {
                 Stock = layout.Stock.ToApiStock(),
                 Foundation = layout.Foundation.ToApiFoundation(),
+                Tableau = layout.Tableau.ToApiTableau(),
             };
         }
 
@@ -125,5 +126,7 @@ namespace patience.core
         }
 
         public static List<string> ToApiFoundation(this Foundation foundation) => foundation.Stacks.Select(stack => stack.Cards.Any() ? stack.Cards.Last().ToString() : "--").ToList();
+
+        public static Dictionary<string, List<string>> ToApiTableau(this Tableau tableau) => tableau.Stacks.ToDictionary(stack => stack.Name, stack => stack.Cards.Any() ? stack.Cards.Select((c, i) => i + 1 < stack.FlippedAt ? "XX" : c.ToString()).ToList() : new List<string>() {"--"});
     }
 }
