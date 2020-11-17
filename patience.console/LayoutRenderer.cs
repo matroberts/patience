@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using patience.core;
 
 namespace patience.console
@@ -15,18 +17,46 @@ namespace patience.console
         
         public static void Render(this ApiLayout layout)
         {
+            layout.Stock.RenderStock();
+            layout.Foundation.RenderFoundation();
+            layout.Tableau.RenderTableau();
+        }
+
+        public static void RenderStock(this List<string> stock)
+        {
             Console.ForegroundColor = ConsoleColor.Black;
-            foreach (var stockCard in layout.Stock)
+            foreach (var stockCard in stock)
             {
                 stockCard.Render();
-                Console.Write(" ");
             }
             Console.WriteLine();
             Console.WriteLine();
-            foreach (var foundationCard in layout.Foundation)
+        }
+
+        public static void RenderFoundation(this List<string> foundation)
+        {
+            foreach (var foundationCard in foundation)
             {
                 foundationCard.Render();
-                Console.Write(" ");
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        public static void RenderTableau(this Dictionary<string, List<string>> tableau)
+        {
+            // have to flip the direction of the cards from rows to columns
+            // find the longest row first
+            var longestRow = tableau.Max(kvp => kvp.Value.Count);
+            for (int i = 0; i < longestRow; i++)
+            {
+                foreach (var key in tableau.Keys)
+                {
+                    var stack = tableau[key];
+                    var tableauCard = i >= stack.Count ? "   " : stack[i].ToString();
+                    tableauCard.Render();
+                }
+                Console.WriteLine();
             }
         }
 
@@ -38,7 +68,7 @@ namespace patience.console
                 Console.ForegroundColor = ConsoleColor.Black;
 
             var displayCard = card.Replace('C', '\u2663').Replace('D', '\u2666').Replace('H', '\u2665').Replace('S', '\u2660');
-            Console.Write(displayCard);
+            Console.Write(displayCard + " ");
         }
     }
 

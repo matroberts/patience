@@ -2,9 +2,9 @@
 
 namespace patience.core
 {
-    public class Deck
+    public class LayoutFactory
     {
-        public List<Card> Create()
+        public List<Card> CreateDeck()
         {
             var cards = new List<Card>();
             for (int i=0; i < 52; i++)
@@ -15,5 +15,7 @@ namespace patience.core
             }
             return cards;
         }
+
+        //public Layout C
     }
 }

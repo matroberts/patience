@@ -6,12 +6,12 @@ using NUnit.Framework;
 namespace patience.core.test
 {
     [TestFixture]
-    public class DeckTests
+    public class LayoutFactoryTests
     {
         [Test]
         public void Create_ShouldMakeADeckOf52Cards_WithFourSuits_AndThirteenRanks()
         {
-            var cards = new Deck().Create();
+            var cards = new LayoutFactory().CreateDeck();
 
             Assert.That(cards.Count(), Is.EqualTo(52));
             Assert.That(cards.Count(c => c.Suit == Suit.Clubs), Is.EqualTo(13));
@@ -36,7 +36,7 @@ namespace patience.core.test
         [Test]
         public void ShuffleTheDeck()
         {
-            var cards = new Deck().Create();
+            var cards = new LayoutFactory().CreateDeck();
             cards.Shuffle();
 
             foreach (var card in cards)
