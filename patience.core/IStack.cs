@@ -1,4 +1,6 @@
-﻿namespace patience.core
+﻿using System.Collections.Generic;
+
+namespace patience.core
 {
     public interface IStack
     {
@@ -8,6 +10,7 @@
         public bool CanAccept(Card card);
         void Give(Card card);
         void AssertInvariants();
+        public List<Card> Cards { get; }
 
     }
 }

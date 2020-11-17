@@ -53,7 +53,7 @@ namespace patience.console
                 foreach (var key in tableau.Keys)
                 {
                     var stack = tableau[key];
-                    var tableauCard = i >= stack.Count ? "   " : stack[i].ToString();
+                    var tableauCard = i >= stack.Count ? string.Empty : stack[i].ToString();
                     tableauCard.Render();
                 }
                 Console.WriteLine();
@@ -68,7 +68,7 @@ namespace patience.console
                 Console.ForegroundColor = ConsoleColor.Black;
 
             var displayCard = card.Replace('C', '\u2663').Replace('D', '\u2666').Replace('H', '\u2665').Replace('S', '\u2660');
-            Console.Write(displayCard + " ");
+            Console.Write(displayCard.Length < 3 ? displayCard.PadLeft(3).PadRight(4): displayCard.PadRight(4));
         }
     }
 

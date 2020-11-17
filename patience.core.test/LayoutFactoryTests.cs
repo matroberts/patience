@@ -9,7 +9,7 @@ namespace patience.core.test
     public class LayoutFactoryTests
     {
         [Test]
-        public void Create_ShouldMakeADeckOf52Cards_WithFourSuits_AndThirteenRanks()
+        public void CreateDeck_ShouldMakeADeckOf52Cards_WithFourSuits_AndThirteenRanks()
         {
             var cards = new LayoutFactory().CreateDeck();
 
@@ -43,6 +43,17 @@ namespace patience.core.test
             {
                 Console.WriteLine(card);
             }
+        }
+
+        [Test]
+        public void Create_ShouldMakeALayoutWith52Cards_AndEachCardIsUnique()
+        {
+            var layout = new LayoutFactory().Create();
+
+            var cards = layout.TempStacks.SelectMany(s => s.Cards);
+
+            Assert.That(cards.Count(), Is.EqualTo(52));
+            Assert.That(cards.Distinct().Count(), Is.EqualTo(cards.Count()));
         }
     }
 }

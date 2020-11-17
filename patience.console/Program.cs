@@ -15,11 +15,7 @@ namespace patience.console
             Console.BufferHeight = Console.WindowHeight;
             Console.BufferWidth = Console.BufferWidth;
 
-            IKlondike klondike = new Klondike(new Layout()
-            {
-                Stock = { Cards = { "3C", "2C", "AC", "4H", "5D", "6S", "7C" }, Position = 0 },
-                Foundation = { SpadesStack = {"AS", "2S"}}
-            });
+            IKlondike klondike = new Klondike(new LayoutFactory().Create());
 
             Console.Clear();
             klondike.Operate("H").Render();

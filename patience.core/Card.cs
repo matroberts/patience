@@ -48,6 +48,12 @@ namespace patience.core
                 return cardObj.Value;
         }
 
+        public bool Equals(Card other) => Suit == other.Suit && Rank == other.Rank;
+        
+        public override bool Equals(object obj) => obj is Card other && Equals(other);
+        
+        public override int GetHashCode() => HashCode.Combine((int) Suit, Rank);
+
         public static bool operator ==(Card left, Card right) => left.Rank == right.Rank && left.Suit == right.Suit;
 
         public static bool operator !=(Card left, Card right) => !(left==right);

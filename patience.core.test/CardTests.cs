@@ -211,5 +211,16 @@ namespace patience.core.test
         }
 
         #endregion
+
+        #region Equals == and all that
+
+        [Test]
+        public void TestTheDistinctWorksCorrectly()
+        {
+            var list = new List<Card> {"AH", "AH"};
+            Assert.That(list.Distinct().Count(), Is.EqualTo(1));
+        }
+
+        #endregion
     }
 }
