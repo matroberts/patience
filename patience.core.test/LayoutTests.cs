@@ -238,6 +238,36 @@ namespace patience.core.test
         #region Move
 
         [Test]
+        public void Move_ThrowsException_IfTheFromStackDoesNotExist()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("NotExists", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("From stack 'NotExists' does not exist."));
+        }
+
+        [Test]
+        public void Move_ThrowsException_IfTheToStackDoesNotExist()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "NotExists"), Throws.ArgumentException.With.Message.EqualTo("To stack 'NotExists' does not exist."));
+        }
+
+        [Test]
         public void Move_FromStockToFoundation_ShouldWork_IfInvariantsNotViolated()
         {
             var layout = new Layout()
@@ -272,6 +302,26 @@ namespace patience.core.test
 
             Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "4D" }));
             Assert.That(layout.Stock.Position, Is.EqualTo(1));
+            Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
+        }
+
+        [Test]
+        public void Move_FromStockToFoundation_ToStock_BringsTheLayoutBackToTheStartingPosition()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AS", "9S", "4D", "10C" }, Position = 3 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            layout.Move("Stock", "DiamondsStack");
+            layout.Move("DiamondsStack", "Stock");
+
+            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "AS", "9S", "4D", "10C" }));
+            Assert.That(layout.Stock.Position, Is.EqualTo(3));
             Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
         }
 
@@ -316,7 +366,27 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromStockToTableau_ThrowsException_IfTheMoveViolatesInvariants()
+        public void Move_FromTableauToStock_ShouldWork_IfInvariantsNotViolated()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"AD", "2D", "7D", "6C"}, FlippedAt = 3}
+                }
+            };
+
+            layout.Move("T1Stack", "Stock");
+
+            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card>{ "6C" }));
+            Assert.That(layout.Stock.Position, Is.EqualTo(1));
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "AD", "2D", "7D" }));
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Move_ToTableau_ThrowsException_IfTheMoveViolatesTableauInvariants()
         {
             var layout = new Layout()
             {
@@ -328,56 +398,6 @@ namespace patience.core.test
             };
 
             Assert.That(() => layout.Move("Stock", "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
-        }
-
-        [Test]
-        public void Move_FromStockToFoundationToStock_BringsTheLayoutBackToTheStartingPosition()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "AS", "9S", "4D", "10C" }, Position = 3 },
-                Foundation =
-                {
-                    DiamondsStack = {"AD", "2D", "3D"}
-                }
-            };
-
-            layout.Move("Stock", "DiamondsStack");
-            layout.Move("DiamondsStack", "Stock");
-
-            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "AS", "9S", "4D", "10C" }));
-            Assert.That(layout.Stock.Position, Is.EqualTo(3));
-            Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
-        }
-
-        [Test]
-        public void Move_ThrowsException_IfTheFromStackDoesNotExist()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "4D" }, Position = 1 },
-                Foundation =
-                {
-                    DiamondsStack = {"AD", "2D", "3D"}
-                }
-            };
-
-            Assert.That(() => layout.Move("NotExists", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("From stack 'NotExists' does not exist."));
-        }
-
-        [Test]
-        public void Move_ThrowsException_IfTheToStackDoesNotExist()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "4D" }, Position = 1 },
-                Foundation =
-                {
-                    DiamondsStack = {"AD", "2D", "3D"}
-                }
-            };
-
-            Assert.That(() => layout.Move("Stock", "NotExists"), Throws.ArgumentException.With.Message.EqualTo("To stack 'NotExists' does not exist."));
         }
 
         [Test]
@@ -408,6 +428,21 @@ namespace patience.core.test
             };
 
             Assert.That(() => layout.Move("DiamondsStack", "Stock"), Throws.ArgumentException.With.Message.EqualTo($"The DiamondsStack has no card to take."));
+        }
+
+        [Test]
+        public void Move_FromTableau_ThrowsException_IfTheStackIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {}, FlippedAt = 0}
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", "Stock"), Throws.ArgumentException.With.Message.EqualTo("The T1Stack has no card to take."));
         }
 
         [Test]

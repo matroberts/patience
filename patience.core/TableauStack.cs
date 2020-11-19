@@ -42,7 +42,12 @@ namespace patience.core
 
         public Card Take()
         {
-            throw new System.NotImplementedException();
+            if (Cards.Count == 0)
+                throw new ArgumentException($"The {Name} has no card to take.");
+
+            var card = Cards[^1];
+            Cards.RemoveAt(Cards.Count - 1);
+            return card;
         }
 
         public bool CanAccept(Card card)
