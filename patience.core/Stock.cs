@@ -40,11 +40,8 @@ namespace patience.core
         {
             if(from != Position)
                 throw new ArgumentException($"Cannot Step from '{from}' since the current position is '{Position}'");
-            if(to < 0)
-                throw new ArgumentException($"Cannot Step to '{to}' since it is before the beginning of the stock.");
-            if(to > Cards.Count)
-                throw new ArgumentException($"Cannot Step to '{to}' since it is past the end of the stock.");
             Position = to;
+            AssertInvariants();
         }
 
         public bool IsAvailable(Card card)

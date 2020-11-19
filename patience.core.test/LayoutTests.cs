@@ -219,7 +219,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 7 }
             };
 
-            Assert.That(() => layout.Step(7, -1), Throws.ArgumentException.With.Message.EqualTo("Cannot Step to '-1' since it is before the beginning of the stock."));
+            Assert.That(() => layout.Step(7, -1), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position -1 is less than 0."));
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 }
             };
 
-            Assert.That(() => layout.Step(6, 8), Throws.ArgumentException.With.Message.EqualTo("Cannot Step to '8' since it is past the end of the stock."));
+            Assert.That(() => layout.Step(6, 8), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position 8 is greater than the stock count 7."));
         }
 
         #endregion
@@ -422,7 +422,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("Cannot give card '4C' to the DiamondsStack because the suit is wrong.")); ;
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack contains the card '4C' which does not match suit.")); ;
         }
 
         [Test]
@@ -437,7 +437,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("Cannot give card '5D' to the DiamondsStack because the rank is wrong.")); ;
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack is not in rank order, ranks are '1, 2, 3, 5'.")); ;
         }
 
         #endregion

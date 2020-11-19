@@ -50,11 +50,8 @@ namespace patience.core
 
         public void Give(Card card)
         {
-            if(card.Suit != Suit)
-                throw new ArgumentException($"Cannot give card '{card}' to the {Name} because the suit is wrong.");
-            if(card.Rank != Cards.Count+1)
-                throw new ArgumentException($"Cannot give card '{card}' to the {Name} because the rank is wrong.");
             Cards.Add(card);
+            AssertInvariants();
         }
     }
 }
