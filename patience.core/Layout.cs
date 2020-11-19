@@ -17,26 +17,14 @@ namespace patience.core
                 yield return Stock;
                 foreach (var stack in Foundation.Stacks)
                     yield return stack;
-
-            }
-        }
-
-        public IEnumerable<IStack> TempStacks
-        {
-            get
-            {
-                yield return Stock;
-                foreach (var stack in Foundation.Stacks)
-                    yield return stack;
                 foreach (var stack in Tableau.Stacks)
                     yield return stack;
-
             }
         }
 
         public void AssertInvariants()
         {
-            foreach (var stack in TempStacks)
+            foreach (var stack in Stacks)
             {
                 stack.AssertInvariants();
             }

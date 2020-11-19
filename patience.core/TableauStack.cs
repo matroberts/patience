@@ -37,7 +37,7 @@ namespace patience.core
 
         public bool IsAvailable(Card card)
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         public Card Take()
@@ -52,9 +52,8 @@ namespace patience.core
 
         public void Give(Card card)
         {
-            throw new System.NotImplementedException();
+            Cards.Add(card);
+            AssertInvariants();
         }
-
-
     }
 }

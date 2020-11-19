@@ -50,7 +50,7 @@ namespace patience.core.test
         {
             var layout = new LayoutFactory().Create();
 
-            var cards = layout.TempStacks.SelectMany(s => s.Cards);
+            var cards = layout.Stacks.SelectMany(s => s.Cards);
 
             Assert.That(cards.Count(), Is.EqualTo(52));
             Assert.That(cards.Distinct().Count(), Is.EqualTo(cards.Count()));

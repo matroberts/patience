@@ -276,7 +276,62 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromStockToFoundationToStock_BringsTheLayoutBackToTheStartingPostition()
+        public void Move_FromStockToTableau_ShouldWork_IfInvariantsNotViolated()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "6C" }, Position = 1 },
+                Tableau = 
+                {
+                    T1Stack = { Cards = {"AD", "2D", "7D"}, FlippedAt = 3}
+                }
+            };
+
+            layout.Move("Stock", "T1Stack");
+
+            Assert.That(layout.Stock.Cards, Is.Empty);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "AD", "2D", "7D", "6C" }));
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Move_FromStockToTableau_DoesNotViolateInvariants_IfNoCardsAreFlippedBeforeTheMove()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "6C" }, Position = 1 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"AD", "2D", "AC"}, FlippedAt = 4} // Off the end of the stack
+                }
+            };
+
+            layout.Move("Stock", "T1Stack");
+
+            Assert.That(layout.Stock.Cards, Is.Empty);
+            Assert.That(layout.Stock.Position, Is.EqualTo(0));
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "AD", "2D", "AC", "6C" }));
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void Move_FromStockToTableau_ThrowsException_IfTheMoveViolatesInvariants()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "6C" }, Position = 1 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"AD", "2D", "AC"}, FlippedAt = 3} // Off the end of the stack
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
+        }
+
+        [Test]
+        public void Move_FromStockToFoundationToStock_BringsTheLayoutBackToTheStartingPosition()
         {
             var layout = new Layout()
             {
