@@ -57,6 +57,7 @@ namespace patience.core
         public string IsAvailable(Card card) => Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
 
         public string CanFoundationAccept(Card card) => Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
+        public string CanAccept(Card card) => Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
     }
 
     public class Foundation

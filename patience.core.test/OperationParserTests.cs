@@ -199,6 +199,110 @@ namespace patience.core.test
 
         #endregion
 
+        #region <card> - If you just specify the card, it will attempt to move it
+
+        [TestCase("AD")]
+        [TestCase("ad")]
+        public void A_CardMove_ResultsInAMoveCommand_FromStockToFoundation_IfEverythingIsValid(string opString)
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AD" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, opString);
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Do));
+            Assert.That(errorMessage, Is.Null);
+            var move = command as MoveCommand;
+            Assert.That(move, Is.Not.Null);
+            Assert.That(move.From, Is.EqualTo("Stock"));
+            Assert.That(move.To, Is.EqualTo("DiamondsStack"));
+        }
+
+        [TestCase("6H")]
+        [TestCase("6h")]
+        public void A_CardMove_ResultsInAMoveCommand_FromTableauToTableau_IfEverythingIsValid(string opString)
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = {Cards = {"7C"}, FlippedAt = 1},
+                    T2Stack = {Cards = {"7S", "6H"}, FlippedAt = 1}
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, opString);
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Do), () => errorMessage);
+            Assert.That(errorMessage, Is.Null);
+            var move = command as MoveCommand;
+            Assert.That(move, Is.Not.Null);
+            Assert.That(move.From, Is.EqualTo("T2Stack"));
+            Assert.That(move.To, Is.EqualTo("T1Stack"));
+        }
+
+        [Test]
+        public void A_Move_ResultsInAError_IfTheCardIsNotAvailableToBeMoved()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AD" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, "4D");
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Error));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo("'4D' is not available to be moved."));
+        }
+
+        [Test]
+        public void A_Move_ResultsInAError_IfNoWhereCanAcceptTheCard()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 1 },
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
+
+            // Act
+            var parser = new OperationParser();
+            var (act, command, errorMessage) = parser.Parse(layout, "4D");
+
+            // Assert
+            Assert.That(act, Is.EqualTo(Act.Error));
+            Assert.That(command, Is.Null);
+            Assert.That(errorMessage, Is.EqualTo($"'4D' cannot be moved anywhere."));
+        }
+
+        #endregion
+
         #region U - Undo
 
         [TestCase("U")]

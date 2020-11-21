@@ -37,7 +37,9 @@ namespace patience.core
 
         public bool IsAvailable(Card card)
         {
-            return false;
+            if(Cards.Count == 0)
+                return false;
+            return Cards.Last() == card;
         }
 
         public Card Take()
@@ -52,7 +54,10 @@ namespace patience.core
 
         public bool CanAccept(Card card)
         {
-            throw new System.NotImplementedException();
+            if (Cards.Count == 0)
+                return card.Rank == 13;  // king rule
+
+            return Cards.Last().Color != card.Color && Cards.Last().Rank == card.Rank + 1;
         }
 
         public void Give(Card card)

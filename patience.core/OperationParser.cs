@@ -16,9 +16,17 @@ namespace patience.core
             {
                 return (Act.Do, MakeDeal(layout), null);
             }
-            else if (apiOperation.StartsWith("F", StringComparison.OrdinalIgnoreCase))
+            else if (Card.Create(apiOperation).card != null)
             {
                 var (command, errorMessage) = MakeMove(layout, apiOperation);
+                if (command == null)
+                    return (Act.Error, null, errorMessage);
+                else
+                    return (Act.Do, command, null);
+            }
+            else if (apiOperation.StartsWith("F", StringComparison.OrdinalIgnoreCase))
+            {
+                var (command, errorMessage) = MakeFoundationMove(layout, apiOperation);
                 if(command == null)
                     return (Act.Error, null, errorMessage);
                 else
@@ -35,6 +43,21 @@ namespace patience.core
         }
 
         private (MoveCommand command, string errorMessage) MakeMove(Layout layout, string apiOperation)
+        {
+            var card = Card.Create(apiOperation).card.Value;
+
+            var from = layout.IsAvailable(card);
+            if (from == null)
+                return (null, $"'{card}' is not available to be moved.");
+
+            var to = layout.CanAccept(card);
+            if (to == null)
+                return (null, $"'{card}' cannot be moved anywhere.");
+
+            return (new MoveCommand() { From = from, To = to }, null);
+        }
+
+        private (MoveCommand command, string errorMessage) MakeFoundationMove(Layout layout, string apiOperation)
         {
             string target = apiOperation.Substring(0, 1);
             string cardStr = apiOperation.Substring(1, apiOperation.Length - 1);

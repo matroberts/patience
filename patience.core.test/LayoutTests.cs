@@ -557,6 +557,46 @@ namespace patience.core.test
             Assert.That(stack, Is.Null);
         }
 
+        [Test]
+        public void IsAvailable_FromTableau_ReturnsTheStackName_IfTheCardIsOnTopOfStack()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau = 
+                {
+                    T3Stack = { Cards = {"AD", "2D", "3D"}, FlippedAt = 3}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("3D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("T3Stack"));
+        }
+
+        [Test]
+        public void IsAvailable_FromTableau_ReturnsNull_IfTheCardIsNotVisible()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T3Stack = { Cards = {"AD", "2D", "3D"}, FlippedAt = 3}
+                }
+            };
+
+            // Act
+            string stack = layout.IsAvailable("2D");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        // TODO IsAvailable in tableau should return true, if the card is one of the flipped cards
+
         #endregion
 
         #region CanFoundationAccept
@@ -639,6 +679,161 @@ namespace patience.core.test
 
         #endregion
 
+        #region CanAccept
 
+        [Test]
+        public void CanAccept_ReturnsTheFoundationStackName_TheCardMatchesSuitAndIsOneRankHigher()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("4D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("DiamondsStack"));
+        }
+
+        [Test]
+        public void CanAccept_ReturnsTheFoundationStackName_IfAFoundationStackIsEmpty_AndYouHaveAnAce()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("AD");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("DiamondsStack"));
+        }
+
+        [Test]
+        public void CanAccept_ReturnsNull_IfTheFoundationStackDoesNotMatchSuit()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("4H");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        [Test]
+        public void CanAccept_ReturnsNull_IfTheFoundationStackRankIsNotNextInLine()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("5D");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        [Test]
+        public void CanAccept_ReturnsTheTableauStack_IfTheCardHasOppositeColor_AndTheRankIsOneLower()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau = 
+                {
+                    T2Stack = { Cards = {"AD", "2D", "3D"}, FlippedAt = 3}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("2C");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("T2Stack"));
+        }
+
+        [Test]
+        public void CanAccept_ReturnsTheTableauStack_IfTheStackIsEmpty_AnYouHaveAKing()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = { Cards = {"7S"}, FlippedAt = 1},
+                    T2Stack = { Cards = {}, FlippedAt = 0}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("KH");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("T2Stack"));
+        }
+
+        [Test]
+        public void CanAccept_ReturnsNull_IfTheTableauStackCard_IsTheSameColor()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T2Stack = { Cards = {"AD", "2D", "3D"}, FlippedAt = 3}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("2H");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        [Test]
+        public void CanAccept_ReturnsNull_IfTheTableauStack_HasTheWrongRank()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T2Stack = { Cards = {"AD", "2D", "3D"}, FlippedAt = 3}
+                }
+            };
+
+            // Act
+            string stack = layout.CanAccept("4C");
+
+            // Assert
+            Assert.That(stack, Is.Null);
+        }
+
+        #endregion
     }
 }
