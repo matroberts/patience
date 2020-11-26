@@ -24,11 +24,11 @@ namespace patience.core
                 throw new InvalidOperationException($"Invariant Violation - {Name} is not in rank order, ranks are '{string.Join(", ", Cards.Select(c => c.Rank.ToString()))}'.");
         }
 
-        public bool IsAvailable(Card card)
+        public (string stack, bool flipTopCard) IsAvailable(Card card)
         {
             if (Cards.Any() == false)
-                return false;
-            return Cards.Last() == card;
+                return (null, false);
+            return (Cards.Last() == card ? Name : null, false);
         }
 
         public Card Take()

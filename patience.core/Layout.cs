@@ -54,8 +54,7 @@ namespace patience.core
             toStack.Give(card);
         }
 
-        public string IsAvailable(Card card) => Stacks.FirstOrDefault(s => s.IsAvailable(card))?.Name;
-
+        public (string stack, bool flipTopCard) IsAvailable(Card card) => Stacks.Select(s => s.IsAvailable(card)).FirstOrDefault(t => t.stack != null);
         public string CanFoundationAccept(Card card) => Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
         public string CanAccept(Card card) => Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
         public void FlipTopCard(string stack) => Stacks.First(s => s.Name == stack).FlipTopCard();

@@ -44,11 +44,11 @@ namespace patience.core
             AssertInvariants();
         }
 
-        public bool IsAvailable(Card card)
+        public (string stack, bool flipTopCard) IsAvailable(Card card)
         {
             if (Position <= 0)
-                return false;
-            return Cards[Position - 1] == card;
+                return (null, false);
+            return (Cards[Position - 1] == card ? Name : null, false);
         }
 
         public Card Take()

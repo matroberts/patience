@@ -537,10 +537,11 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("4D");
+            var (stack, flipTopCard) = layout.IsAvailable("4D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("Stock"));
+            Assert.That(flipTopCard, Is.False);
         }
 
         [Test]
@@ -557,10 +558,11 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("4D");
+            var (stack, flipTopCard) = layout.IsAvailable("4D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(flipTopCard, Is.False);
         }
 
         [Test]
@@ -576,10 +578,11 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("3D");
+            var (stack, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("DiamondsStack"));
+            Assert.That(flipTopCard, Is.False);
         }
 
         [Test]
@@ -595,14 +598,35 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("3D");
+            var (stack, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(flipTopCard, Is.False);
         }
 
         [Test]
         public void IsAvailable_FromTableau_ReturnsTheStackName_IfTheCardIsOnTopOfStack()
+        {
+            // Arrange
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T3Stack = { Cards = {"AD", "4C", "3D"}, FlippedAt = 4}
+                }
+            };
+
+            // Act
+            var (stack, flipTopCard) = layout.IsAvailable("3D");
+
+            // Assert
+            Assert.That(stack, Is.EqualTo("T3Stack"));
+            Assert.That(flipTopCard, Is.False);
+        }
+
+        [Test]
+        public void IsAvailable_FromTableau_AlsoReturnsFlipTopCardTrue_IfMovingTheTopCardWillUncoverANewCard()
         {
             // Arrange
             var layout = new Layout()
@@ -614,10 +638,11 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("3D");
+            var (stack, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("T3Stack"));
+            Assert.That(flipTopCard, Is.True);
         }
 
         [Test]
@@ -633,13 +658,12 @@ namespace patience.core.test
             };
 
             // Act
-            string stack = layout.IsAvailable("2D");
+            var (stack, flipTopCard) = layout.IsAvailable("2D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(flipTopCard, Is.False);
         }
-
-        // TODO IsAvailable in tableau should return true, if the card is one of the flipped cards
 
         #endregion
 
