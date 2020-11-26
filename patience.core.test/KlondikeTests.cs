@@ -357,7 +357,7 @@ F<card> Move the <card> to the Foundation
             Assert.That(result.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "7S" }));
         }
 
-        [Test, Ignore("")]
+        [Test]
         public void Move_CanMoveACardFromOneTableauStackToAnother_AndTheSourceStackWillFlipItsNewTopCardIfNecessary()
         {
             var layout = new Layout()
@@ -504,6 +504,32 @@ F<card> Move the <card> to the Foundation
             Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result2.Layout.Stock, Is.EqualTo(new[] { "--", "AS" }));
             Assert.That(result2.Layout.Foundation, Is.EqualTo(new[] { "--", "3D", "--", "--" }));
+        }
+
+        [Test]
+        public void Undo_TableauMoveWithAFlip_WillUndoTheFlip()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = {Cards = {"7C"}, FlippedAt = 1},
+                    T2Stack = {Cards = {"7S", "6H"}, FlippedAt = 2}
+                }
+            };
+
+            var klondike = new Klondike(layout);
+
+            var before = klondike.Operate("H");
+            Assert.That(before.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "XX", "6H" }));
+
+            var result = klondike.Operate("6H");
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "7S" }));
+
+            var result2 = klondike.Operate("U");
+            Assert.That(result2.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result2.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "XX", "6H" }));
         }
 
         #endregion

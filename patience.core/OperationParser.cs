@@ -54,7 +54,7 @@ namespace patience.core
             if (to == null)
                 return (null, $"'{card}' cannot be moved anywhere.");
 
-            return (new MoveCommand() { From = from, To = to }, null);
+            return (new MoveCommand() { From = from, To = to, FlipTopCard = flipTopCard}, null);
         }
 
         private (MoveCommand command, string errorMessage) MakeFoundationMove(Layout layout, string apiOperation)
@@ -75,7 +75,7 @@ namespace patience.core
             if (to == null)
                 return (null, $"'{card}' cannot be moved to the foundation.");
 
-            return (new MoveCommand(){From = from, To = to}, null);
+            return (new MoveCommand(){From = from, To = to, FlipTopCard = flipTopCard}, null);
         }
     }
 

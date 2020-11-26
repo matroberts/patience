@@ -23,15 +23,20 @@
 
     public class MoveCommand : ICommand
     {
+        public bool FlipTopCard { get; set; }
         public string From { get; set; }
         public string To { get; set; }
         public void Do(Layout layout)
         {
             layout.Move(From, To);
+            if(FlipTopCard)
+                layout.FlipTopCard(From);
         }
 
         public void Undo(Layout layout)
         {
+            if (FlipTopCard)
+                layout.FlipTopCard(From);
             layout.Move(To, From);
         }
     }
