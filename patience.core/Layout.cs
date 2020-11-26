@@ -58,6 +58,7 @@ namespace patience.core
 
         public string CanFoundationAccept(Card card) => Foundation.Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
         public string CanAccept(Card card) => Stacks.FirstOrDefault(s => s.CanAccept(card))?.Name;
+        public void FlipTopCard(string stack) => Stacks.First(s => s.Name == stack).FlipTopCard();
     }
 
     public class Foundation

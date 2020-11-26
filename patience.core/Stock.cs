@@ -69,5 +69,7 @@ namespace patience.core
             Cards.Insert(Position, card);
             Position++;
         }
+
+        public void FlipTopCard() => throw new InvalidOperationException("You cannot flip a card in the Stock");
     }
 }

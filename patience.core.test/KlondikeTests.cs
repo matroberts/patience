@@ -348,6 +348,32 @@ F<card> Move the <card> to the Foundation
 
             var klondike = new Klondike(layout);
 
+            var before = klondike.Operate("H");
+            Assert.That(before.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "7S", "6H" }));
+
+            var result = klondike.Operate("6H");
+            Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
+            Assert.That(result.Layout.Tableau["T1Stack"], Is.EqualTo(new[] { "7C", "6H" }));
+            Assert.That(result.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "7S" }));
+        }
+
+        [Test, Ignore("")]
+        public void Move_CanMoveACardFromOneTableauStackToAnother_AndTheSourceStackWillFlipItsNewTopCardIfNecessary()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = {Cards = {"7C"}, FlippedAt = 1},
+                    T2Stack = {Cards = {"7S", "6H"}, FlippedAt = 2}
+                }
+            };
+
+            var klondike = new Klondike(layout);
+
+            var before = klondike.Operate("H");
+            Assert.That(before.Layout.Tableau["T2Stack"], Is.EqualTo(new[] { "XX", "6H" }));
+
             var result = klondike.Operate("6H");
             Assert.That(result.Status, Is.EqualTo(ApiStatus.Ok));
             Assert.That(result.Layout.Tableau["T1Stack"], Is.EqualTo(new[] { "7C", "6H" }));

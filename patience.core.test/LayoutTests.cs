@@ -118,6 +118,50 @@ namespace patience.core.test
             Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped cards are not alternating color.  Flipped cards are: 4C, 3S."));
         }
 
+        [Test]
+        public void AssertInvariants_Tableau_TheFlippedCardCanBeOnePastTheEndOfTheStack()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 6 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.Nothing);
+        }
+
+        [Test]
+        public void AssertInvariants_Tableau_IfTheFlippedAtPositionIsMoreThanOnePastTheEndOfTheStack_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 7 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped card position is too far beyond the end of the stack.  FlippedAt 7 NumberCards 5."));
+        }
+
+        [Test]
+        public void AssertInvariants_Tableau_TheFlippedAtPosition_CanBeZero()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "7C", "6H", "5S", "4D", "3C" }, FlippedAt = 0 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.Nothing);
+        }
+
+        [Test]
+        public void AssertInvariants_Tableau_IfTheFlippedAtPositionIsLessThanZero_AnExceptionIsThrown()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "7C", "6H", "5S", "4D", "3C" }, FlippedAt = -1 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - T1Stack flipped card position is less than zero."));
+        }
+
         #endregion
 
         #region Measure and Step - together make deal and un-deal
@@ -832,6 +876,80 @@ namespace patience.core.test
 
             // Assert
             Assert.That(stack, Is.Null);
+        }
+
+        #endregion
+
+        #region FlipTopCard
+
+        [Test]
+        public void FlipTopCard_ThrowsInvalidOperationException_IfCalledOnTheStock()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 0 } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.FlipTopCard("Stock"), Throws.InvalidOperationException.With.Message.EqualTo("You cannot flip a card in the Stock"));
+        }
+
+        [Test]
+        public void FlipTopCard_ThrowsInvalidOperationException_IfCalledOnTheFoundation()
+        {
+            var layout = new Layout()
+            {
+                Foundation = { ClubsStack = { "AH" } }
+            };
+
+            Assert.That(() => layout.FlipTopCard("ClubsStack"), Throws.InvalidOperationException.With.Message.EqualTo("You cannot flip a card in the ClubsStack"));
+        }
+
+        [Test]
+        public void FlipTopCard_WillTurnTheTopCardFaceUp_IfTheTopCardIsFaceDown()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 6 } } // 1-indexed !!
+            };
+
+            layout.FlipTopCard("T1Stack");
+
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void FlipTopCard_WillTurnTheTopCardFaceDown_IfTheTopCardIsFaceUp()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 5 } } // 1-indexed !!
+            };
+
+            layout.FlipTopCard("T1Stack");
+
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void FlipTopCard_ThrowsInvalidOperationException_IfTheFlippedAtPositionIsTooHigh()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 7 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.FlipTopCard("T1Stack"), Throws.InvalidOperationException.With.Message.EqualTo("The T1Stack is in the wrong position for FlipTopCard.  FlippedAt=7 NumberCards=5."));
+        }
+
+        [Test]
+        public void FlipTopCard_ThrowsInvalidOperationException_IfTheFlippedAtPositionIsTooLow()
+        {
+            var layout = new Layout()
+            {
+                Tableau = { T1Stack = { Cards = { "AC", "2C", "3C", "4C", "3S" }, FlippedAt = 4 } } // 1-indexed !!
+            };
+
+            Assert.That(() => layout.FlipTopCard("T1Stack"), Throws.InvalidOperationException.With.Message.EqualTo("The T1Stack is in the wrong position for FlipTopCard.  FlippedAt=4 NumberCards=5."));
         }
 
         #endregion

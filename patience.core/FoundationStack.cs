@@ -53,5 +53,7 @@ namespace patience.core
             Cards.Add(card);
             AssertInvariants();
         }
+
+        public void FlipTopCard() => throw new InvalidOperationException($"You cannot flip a card in the {Name}");
     }
 }

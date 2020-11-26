@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Bson;
 
 namespace patience.core
 {
@@ -9,6 +10,7 @@ namespace patience.core
         Card Take();
         public bool CanAccept(Card card);
         void Give(Card card);
+        void FlipTopCard();
         void AssertInvariants();
         public List<Card> Cards { get; }
 
