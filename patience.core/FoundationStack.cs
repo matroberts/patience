@@ -40,7 +40,8 @@ namespace patience.core
 
         public void Give(List<Card> cards)
         {
-            // TODO n<>1
+            if (cards.Count != 1)
+                throw new ArgumentException($"You can only give 1 card to the {Name}.  You attempted to give {cards.Count} cards.");
             Cards.Add(cards.First());
             AssertInvariants();
         }
@@ -49,11 +50,10 @@ namespace patience.core
         {
             if (n != 1)
                 throw new ArgumentException($"You can only take 1 card from the {Name}.  You attempted to take {n} cards.");
-
             if (Cards.Count == 0)
                 throw new ArgumentException($"The {Name} has no card to take.");
 
-            var cards = Cards.GetRange(Cards.Count - n, n); ;
+            var cards = Cards.GetRange(Cards.Count - n, n);
             Cards.RemoveRange(Cards.Count-n, n);
             return cards;
         }

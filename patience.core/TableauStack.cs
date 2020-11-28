@@ -55,21 +55,20 @@ namespace patience.core
 
         public void Give(List<Card> cards)
         {
-            // TODO n<>1
-            Cards.Add(cards.First());
+            Cards.AddRange(cards);
             AssertInvariants();
         }
 
         public List<Card> Take(int n)
         {
-            // TODO n<>1
+            if (n <= 0)
+                throw new ArgumentException($"You must take at least one card from {Name}.");
+            if (n > Cards.Count)
+                throw new ArgumentException($"The {Name} has only {Cards.Count} cards and you attempted to take {n}.");
 
-            if (Cards.Count == 0)
-                throw new ArgumentException($"The {Name} has no card to take.");
-
-            var card = Cards[^1];
-            Cards.RemoveAt(Cards.Count - 1);
-            return new List<Card>{card};
+            var cards = Cards.GetRange(Cards.Count - n, n);
+            Cards.RemoveRange(Cards.Count - n, n);
+            return cards;
         }
 
         public void FlipTopCard()

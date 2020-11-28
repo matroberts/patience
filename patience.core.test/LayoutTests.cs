@@ -331,25 +331,6 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromFoundationToStock_ShouldWork_IfInvariantsNotViolated()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = {  }, Position = 0},
-                Foundation =
-                {
-                    DiamondsStack = {"AD", "2D", "3D", "4D" }
-                }
-            };
-
-            layout.Move("DiamondsStack", 1, "Stock");
-
-            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "4D" }));
-            Assert.That(layout.Stock.Position, Is.EqualTo(1));
-            Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
-        }
-
-        [Test]
         public void Move_FromStockToFoundation_ToStock_BringsTheLayoutBackToTheStartingPosition()
         {
             var layout = new Layout()
@@ -385,27 +366,12 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromFoundationToStock_ThrowsArgumentException_IfYouAttemptToMoveMoreThanOneCard()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { }, Position = 0 },
-                Foundation =
-                {
-                    DiamondsStack = {"AD", "2D", "3D", "4D" }
-                }
-            };
-
-            Assert.That(() => layout.Move("DiamondsStack", 2, "Stock"), Throws.ArgumentException.With.Message.EqualTo($"You can only take 1 card from the DiamondsStack.  You attempted to take 2 cards."));
-        }
-
-        [Test]
         public void Move_FromStockToTableau_ShouldWork_IfInvariantsNotViolated()
         {
             var layout = new Layout()
             {
                 Stock = { Cards = { "6C" }, Position = 1 },
-                Tableau = 
+                Tableau =
                 {
                     T1Stack = { Cards = {"AD", "2D", "7D"}, FlippedAt = 3}
                 }
@@ -420,7 +386,7 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromStockToTableau_DoesNotViolateInvariants_IfNoCardsAreFlippedBeforeTheMove()
+        public void Move_FromStockToTableau_DoesNotViolateInvariants_EvenIfNoCardsAreFlippedBeforeTheMove()
         {
             var layout = new Layout()
             {
@@ -440,41 +406,6 @@ namespace patience.core.test
         }
 
         [Test]
-        public void Move_FromTableauToStock_ShouldWork_IfInvariantsNotViolated()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { }, Position = 0 },
-                Tableau =
-                {
-                    T1Stack = { Cards = {"AD", "2D", "7D", "6C"}, FlippedAt = 3}
-                }
-            };
-
-            layout.Move("T1Stack", 1, "Stock");
-
-            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card>{ "6C" }));
-            Assert.That(layout.Stock.Position, Is.EqualTo(1));
-            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "AD", "2D", "7D" }));
-            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(3));
-        }
-
-        [Test]
-        public void Move_ToTableau_ThrowsException_IfTheMoveViolatesTableauInvariants()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { "6C" }, Position = 1 },
-                Tableau =
-                {
-                    T1Stack = { Cards = {"AD", "2D", "AC"}, FlippedAt = 3} // Off the end of the stack
-                }
-            };
-
-            Assert.That(() => layout.Move("Stock", 1, "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
-        }
-
-        [Test]
         public void Move_FromStock_ThrowsException_IfThereIsNoCardToTakeFromTheStock()
         {
             var layout = new Layout()
@@ -490,6 +421,55 @@ namespace patience.core.test
         }
 
         [Test]
+        public void Move_ToStock_ThrowsException_IfThereIsMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "4D" }, Position = 0 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"6H", "5C", "4D"}, FlippedAt = 1},
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", 2, "Stock"), Throws.ArgumentException.With.Message.EqualTo("You can only give 1 card to the Stock.  You attempted to give 2 cards."));
+        }
+
+        [Test]
+        public void Move_FromFoundationToStock_ShouldWork_IfInvariantsNotViolated()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D", "4D" }
+                }
+            };
+
+            layout.Move("DiamondsStack", 1, "Stock");
+
+            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "4D" }));
+            Assert.That(layout.Stock.Position, Is.EqualTo(1));
+            Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
+        }
+
+        [Test]
+        public void Move_FromFoundationToStock_ThrowsArgumentException_IfYouAttemptToMoveMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D", "4D" }
+                }
+            };
+
+            Assert.That(() => layout.Move("DiamondsStack", 2, "Stock"), Throws.ArgumentException.With.Message.EqualTo($"You can only take 1 card from the DiamondsStack.  You attempted to take 2 cards."));
+        }
+
+        [Test]
         public void Move_FromFoundation_ThrowsException_IfTheFoundationIsEmpty()
         {
             var layout = new Layout()
@@ -502,21 +482,6 @@ namespace patience.core.test
             };
 
             Assert.That(() => layout.Move("DiamondsStack", 1, "Stock"), Throws.ArgumentException.With.Message.EqualTo($"The DiamondsStack has no card to take."));
-        }
-
-        [Test]
-        public void Move_FromTableau_ThrowsException_IfTheStackIsEmpty()
-        {
-            var layout = new Layout()
-            {
-                Stock = { Cards = { }, Position = 0 },
-                Tableau =
-                {
-                    T1Stack = { Cards = {}, FlippedAt = 0}
-                }
-            };
-
-            Assert.That(() => layout.Move("T1Stack", 1, "Stock"), Throws.ArgumentException.With.Message.EqualTo("The T1Stack has no card to take."));
         }
 
         [Test]
@@ -547,6 +512,140 @@ namespace patience.core.test
             };
 
             Assert.That(() => layout.Move("Stock", 1, "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack is not in rank order, ranks are '1, 2, 3, 5'.")); ;
+        }
+
+        [Test]
+        public void Move_ToFoundation_ThrowsException_IfThereIsMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"6H", "5C", "4D"}, FlippedAt = 1},
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", 2, "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("You can only give 1 card to the DiamondsStack.  You attempted to give 2 cards."));
+        }
+
+        [Test]
+        public void Move_FromTableauToStock_ShouldWork_IfInvariantsNotViolated()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"AD", "2D", "7D", "6C"}, FlippedAt = 3}
+                }
+            };
+
+            layout.Move("T1Stack", 1, "Stock");
+
+            Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card>{ "6C" }));
+            Assert.That(layout.Stock.Position, Is.EqualTo(1));
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "AD", "2D", "7D" }));
+            Assert.That(layout.Tableau.T1Stack.FlippedAt, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Move_FromTableauToTableau_ShouldWork_IfInvariantsNotViolated()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = { Cards = {"KS", "QH", "JS"}, FlippedAt = 3},
+                    T2Stack = { Cards = {"AD", "QD"}, FlippedAt = 2},
+                }
+            };
+
+            layout.Move("T1Stack", 1, "T2Stack");
+
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "KS", "QH" }));
+            Assert.That(layout.Tableau.T2Stack.Cards, Is.EqualTo(new List<Card> { "AD", "QD", "JS" }));
+        }
+
+        [Test]
+        public void Move_FromTableauToTableau_CanMoveMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = { Cards = {"6H", "5C", "4D"}, FlippedAt = 1},
+                    T2Stack = { Cards = {"6D"}, FlippedAt = 1},
+                }
+            };
+
+            layout.Move("T1Stack", 2, "T2Stack");
+
+            Assert.That(layout.Tableau.T1Stack.Cards, Is.EqualTo(new List<Card> { "6H" }));
+            Assert.That(layout.Tableau.T2Stack.Cards, Is.EqualTo(new List<Card> { "6D", "5C", "4D" }));
+        }
+
+        [Test]
+        public void Move_FromTableau_ThrowsArgumentException_IfYouAttemptToMoveZeroCards()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = { Cards = {"6H", "5C", "4D"}, FlippedAt = 1},
+                    T2Stack = { Cards = {"6D"}, FlippedAt = 1},
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", 0, "T2Stack"), Throws.ArgumentException.With.Message.EqualTo($"You must take at least one card from T1Stack."));
+        }
+
+        [Test]
+        public void Move_FromTableau_ThrowsArgumentException_IfYouTakeMoreCardsThanTheStackHas()
+        {
+            var layout = new Layout()
+            {
+                Tableau =
+                {
+                    T1Stack = { Cards = {"6H", "5C", "4D"}, FlippedAt = 1},
+                    T2Stack = { Cards = {"6D"}, FlippedAt = 1},
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", 4, "T2Stack"), Throws.ArgumentException.With.Message.EqualTo($"The T1Stack has only 3 cards and you attempted to take 4."));
+        }
+
+        [Test]
+        public void Move_ToTableau_ThrowsException_IfTheMoveViolatesTableauInvariants()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "6C" }, Position = 1 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {"AD", "2D", "AC"}, FlippedAt = 3} // Off the end of the stack
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", 1, "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
+        }
+
+        [Test]
+        public void Move_FromTableau_ThrowsException_IfTheStackIsEmpty()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Tableau =
+                {
+                    T1Stack = { Cards = {}, FlippedAt = 0}
+                }
+            };
+
+            Assert.That(() => layout.Move("T1Stack", 1, "Stock"), Throws.ArgumentException.With.Message.EqualTo("The T1Stack has only 0 cards and you attempted to take 1."));
         }
 
         #endregion
