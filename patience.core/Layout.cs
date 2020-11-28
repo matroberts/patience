@@ -40,7 +40,7 @@ namespace patience.core
 
         public void Step(int from, int to) => Stock.Step(from, to);
 
-        public void Move(string from, string to)
+        public void Move(string from, int n, string to)
         {
             var fromStack = Stacks.FirstOrDefault(s => s.Name == from);
             if(fromStack == null)
@@ -50,7 +50,7 @@ namespace patience.core
             if (toStack == null)
                 throw new ArgumentException($"To stack '{to}' does not exist.");
 
-            var cards = fromStack.Take(1);
+            var cards = fromStack.Take(n);
             toStack.Give(cards);
         }
 

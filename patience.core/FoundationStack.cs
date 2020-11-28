@@ -47,14 +47,15 @@ namespace patience.core
 
         public List<Card> Take(int n)
         {
-            // TODO n<>1
+            if (n != 1)
+                throw new ArgumentException($"You can only take 1 card from the {Name}.  You attempted to take {n} cards.");
 
             if (Cards.Count == 0)
                 throw new ArgumentException($"The {Name} has no card to take.");
 
-            var card = Cards[^1];
-            Cards.RemoveAt(Cards.Count-1);
-            return new List<Card>(){ card };
+            var cards = Cards.GetRange(Cards.Count - n, n); ;
+            Cards.RemoveRange(Cards.Count-n, n);
+            return cards;
         }
 
         public void FlipTopCard() => throw new InvalidOperationException($"You cannot flip a card in the {Name}");

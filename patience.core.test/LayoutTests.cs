@@ -293,7 +293,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("NotExists", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("From stack 'NotExists' does not exist."));
+            Assert.That(() => layout.Move("NotExists", 1, "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("From stack 'NotExists' does not exist."));
         }
 
         [Test]
@@ -308,7 +308,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "NotExists"), Throws.ArgumentException.With.Message.EqualTo("To stack 'NotExists' does not exist."));
+            Assert.That(() => layout.Move("Stock", 1, "NotExists"), Throws.ArgumentException.With.Message.EqualTo("To stack 'NotExists' does not exist."));
         }
 
         [Test]
@@ -323,7 +323,7 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("Stock", "DiamondsStack");
+            layout.Move("Stock", 1, "DiamondsStack");
 
             Assert.That(layout.Stock.Cards, Is.Empty);
             Assert.That(layout.Stock.Position, Is.EqualTo(0));
@@ -342,7 +342,7 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("DiamondsStack", "Stock");
+            layout.Move("DiamondsStack", 1, "Stock");
 
             Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "4D" }));
             Assert.That(layout.Stock.Position, Is.EqualTo(1));
@@ -361,12 +361,42 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("Stock", "DiamondsStack");
-            layout.Move("DiamondsStack", "Stock");
+            layout.Move("Stock", 1, "DiamondsStack");
+            layout.Move("DiamondsStack", 1, "Stock");
 
             Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card> { "AS", "9S", "4D", "10C" }));
             Assert.That(layout.Stock.Position, Is.EqualTo(3));
             Assert.That(layout.Foundation.DiamondsStack, Is.EqualTo(new List<Card> { "AD", "2D", "3D" }));
+        }
+
+        [Test]
+        public void Move_FromStockToFoundation_ThrowsArgumentException_IfYouAttemptToMoveMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { "KC", "4D" }, Position = 2 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D"}
+                }
+            };
+
+            Assert.That(() => layout.Move("Stock", 2, "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo($"You can only take 1 card from the Stock.  You attempted to take 2 cards."));
+        }
+
+        [Test]
+        public void Move_FromFoundationToStock_ThrowsArgumentException_IfYouAttemptToMoveMoreThanOneCard()
+        {
+            var layout = new Layout()
+            {
+                Stock = { Cards = { }, Position = 0 },
+                Foundation =
+                {
+                    DiamondsStack = {"AD", "2D", "3D", "4D" }
+                }
+            };
+
+            Assert.That(() => layout.Move("DiamondsStack", 2, "Stock"), Throws.ArgumentException.With.Message.EqualTo($"You can only take 1 card from the DiamondsStack.  You attempted to take 2 cards."));
         }
 
         [Test]
@@ -381,7 +411,7 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("Stock", "T1Stack");
+            layout.Move("Stock", 1, "T1Stack");
 
             Assert.That(layout.Stock.Cards, Is.Empty);
             Assert.That(layout.Stock.Position, Is.EqualTo(0));
@@ -401,7 +431,7 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("Stock", "T1Stack");
+            layout.Move("Stock", 1, "T1Stack");
 
             Assert.That(layout.Stock.Cards, Is.Empty);
             Assert.That(layout.Stock.Position, Is.EqualTo(0));
@@ -421,7 +451,7 @@ namespace patience.core.test
                 }
             };
 
-            layout.Move("T1Stack", "Stock");
+            layout.Move("T1Stack", 1, "Stock");
 
             Assert.That(layout.Stock.Cards, Is.EqualTo(new List<Card>{ "6C" }));
             Assert.That(layout.Stock.Position, Is.EqualTo(1));
@@ -441,7 +471,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
+            Assert.That(() => layout.Move("Stock", 1, "T1Stack"), Throws.InvalidOperationException.With.Message.StartsWith("Invariant Violation - T1Stack flipped cards are not in descending order."));
         }
 
         [Test]
@@ -456,7 +486,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("The Stock has no card to take.")); ;
+            Assert.That(() => layout.Move("Stock", 1, "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("The Stock has no card to take.")); ;
         }
 
         [Test]
@@ -471,7 +501,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("DiamondsStack", "Stock"), Throws.ArgumentException.With.Message.EqualTo($"The DiamondsStack has no card to take."));
+            Assert.That(() => layout.Move("DiamondsStack", 1, "Stock"), Throws.ArgumentException.With.Message.EqualTo($"The DiamondsStack has no card to take."));
         }
 
         [Test]
@@ -486,7 +516,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("T1Stack", "Stock"), Throws.ArgumentException.With.Message.EqualTo("The T1Stack has no card to take."));
+            Assert.That(() => layout.Move("T1Stack", 1, "Stock"), Throws.ArgumentException.With.Message.EqualTo("The T1Stack has no card to take."));
         }
 
         [Test]
@@ -501,7 +531,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack contains the card '4C' which does not match suit.")); ;
+            Assert.That(() => layout.Move("Stock", 1, "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack contains the card '4C' which does not match suit.")); ;
         }
 
         [Test]
@@ -516,7 +546,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack is not in rank order, ranks are '1, 2, 3, 5'.")); ;
+            Assert.That(() => layout.Move("Stock", 1, "DiamondsStack"), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - DiamondsStack is not in rank order, ranks are '1, 2, 3, 5'.")); ;
         }
 
         #endregion

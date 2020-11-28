@@ -28,7 +28,7 @@
         public string To { get; set; }
         public void Do(Layout layout)
         {
-            layout.Move(From, To);
+            layout.Move(From, 1, To);
             if(FlipTopCard)
                 layout.FlipTopCard(From);
         }
@@ -37,7 +37,7 @@
         {
             if (FlipTopCard)
                 layout.FlipTopCard(From);
-            layout.Move(To, From);
+            layout.Move(To, 1, From);
         }
     }
 }

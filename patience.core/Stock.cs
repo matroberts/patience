@@ -56,15 +56,18 @@ namespace patience.core
 
         public void Give(List<Card> cards)
         {
-            // TODO n<>1
+            // if (cards.Count != 1)
+                // throw new ArgumentException($"You can only give 1 card to the {Name}.  You attempted to give {cards.Count} cards.");
+
             Cards.Insert(Position, cards.First());
             Position++;
         }
 
         public List<Card> Take(int n)
         {
-            // TODO n<>1
-            if(Position <= 0)
+            if(n != 1)
+                throw new ArgumentException($"You can only take 1 card from the {Name}.  You attempted to take {n} cards.");
+            if (Position <= 0)
                 throw new ArgumentException($"The {Name} has no card to take.");
 
             var card = Cards[Position - 1];
