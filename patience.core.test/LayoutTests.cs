@@ -29,7 +29,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AC", "2C", "3C", "4C", "5C" }, Position = 6 }
             };
 
-            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position 6 is greater than the stock count 5."));
+            Assert.That(() => layout.AssertInvariants(), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position 6 is greater than the Stock count 5."));
         }
 
         [Test]
@@ -274,7 +274,7 @@ namespace patience.core.test
                 Stock = { Cards = { "AC", "2C", "3C", "4C", "5C", "6C", "7C" }, Position = 6 }
             };
 
-            Assert.That(() => layout.Step(6, 8), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position 8 is greater than the stock count 7."));
+            Assert.That(() => layout.Step(6, 8), Throws.InvalidOperationException.With.Message.EqualTo("Invariant Violation - Stock Position 8 is greater than the Stock count 7."));
         }
 
         #endregion
@@ -456,7 +456,7 @@ namespace patience.core.test
                 }
             };
 
-            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("The stock has no card to take.")); ;
+            Assert.That(() => layout.Move("Stock", "DiamondsStack"), Throws.ArgumentException.With.Message.EqualTo("The Stock has no card to take.")); ;
         }
 
         [Test]

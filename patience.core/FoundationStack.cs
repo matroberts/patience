@@ -7,10 +7,10 @@ namespace patience.core
 {
     public class FoundationStack : IEnumerable<Card>, IStack
     {
-        public string Name => $"{this.Suit}Stack";
-
         public FoundationStack(Suit suit) => Suit = suit;
         public Suit Suit { get; }
+        public string Name => $"{this.Suit}Stack";
+
         public List<Card> Cards { get; set; } = new List<Card>();
         public IEnumerator<Card> GetEnumerator() => Cards.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -31,18 +31,6 @@ namespace patience.core
             return (Cards.Last() == card ? Name : null, false);
         }
 
-        public List<Card> Take(int n)
-        {
-            // TODO n<>1
-
-            if (Cards.Count == 0)
-                throw new ArgumentException($"The {Name} has no card to take.");
-
-            var card = Cards[^1];
-            Cards.RemoveAt(Cards.Count-1);
-            return new List<Card>(){ card };
-        }
-
         public bool CanAccept(Card card)
         {
             if (Suit != card.Suit)
@@ -55,6 +43,18 @@ namespace patience.core
             // TODO n<>1
             Cards.Add(cards.First());
             AssertInvariants();
+        }
+
+        public List<Card> Take(int n)
+        {
+            // TODO n<>1
+
+            if (Cards.Count == 0)
+                throw new ArgumentException($"The {Name} has no card to take.");
+
+            var card = Cards[^1];
+            Cards.RemoveAt(Cards.Count-1);
+            return new List<Card>(){ card };
         }
 
         public void FlipTopCard() => throw new InvalidOperationException($"You cannot flip a card in the {Name}");

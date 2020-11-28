@@ -7,10 +7,8 @@ namespace patience.core
 {
     public class TableauStack : IEnumerable<Card>, IStack
     {
-        public TableauStack(string label) => this.label = label;
-
-        private readonly string label;
-        public string Name => $"{this.label}Stack";
+        public TableauStack(string label) => this.Name = $"{label}Stack";
+        public string Name { get; }
 
         public List<Card> Cards { get; set; } = new List<Card>();
         public IEnumerator<Card> GetEnumerator() => Cards.GetEnumerator();
@@ -47,18 +45,6 @@ namespace patience.core
             return (Cards.Last() == card ? Name : null, Cards.Count == FlippedAt);
         }
 
-        public List<Card> Take(int n)
-        {
-            // TODO n<>1
-
-            if (Cards.Count == 0)
-                throw new ArgumentException($"The {Name} has no card to take.");
-
-            var card = Cards[^1];
-            Cards.RemoveAt(Cards.Count - 1);
-            return new List<Card>{card};
-        }
-
         public bool CanAccept(Card card)
         {
             if (Cards.Count == 0)
@@ -72,6 +58,18 @@ namespace patience.core
             // TODO n<>1
             Cards.Add(cards.First());
             AssertInvariants();
+        }
+
+        public List<Card> Take(int n)
+        {
+            // TODO n<>1
+
+            if (Cards.Count == 0)
+                throw new ArgumentException($"The {Name} has no card to take.");
+
+            var card = Cards[^1];
+            Cards.RemoveAt(Cards.Count - 1);
+            return new List<Card>{card};
         }
 
         public void FlipTopCard()

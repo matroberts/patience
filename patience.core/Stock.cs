@@ -19,9 +19,9 @@ namespace patience.core
         public void AssertInvariants()
         {
             if(Position < 0)
-                throw new InvalidOperationException($"Invariant Violation - Stock Position {Position} is less than 0.");
+                throw new InvalidOperationException($"Invariant Violation - {Name} Position {Position} is less than 0.");
             if (Position > Cards.Count)
-                throw new InvalidOperationException($"Invariant Violation - Stock Position {Position} is greater than the stock count {Cards.Count}.");
+                throw new InvalidOperationException($"Invariant Violation - {Name} Position {Position} is greater than the {Name} count {Cards.Count}.");
         }
 
         public (int from, int to) Measure()
@@ -52,18 +52,6 @@ namespace patience.core
             return (Cards[Position - 1] == card ? Name : null, false);
         }
 
-        public List<Card> Take(int n)
-        {
-            // TODO n<>1
-            if(Position <= 0)
-                throw new ArgumentException("The stock has no card to take.");
-
-            var card = Cards[Position - 1];
-            Cards.RemoveAt(Position-1);
-            Position--;
-            return new List<Card>(){ card };
-        }
-
         public bool CanAccept(Card card) => false;
 
         public void Give(List<Card> cards)
@@ -73,6 +61,18 @@ namespace patience.core
             Position++;
         }
 
-        public void FlipTopCard() => throw new InvalidOperationException("You cannot flip a card in the Stock");
+        public List<Card> Take(int n)
+        {
+            // TODO n<>1
+            if(Position <= 0)
+                throw new ArgumentException($"The {Name} has no card to take.");
+
+            var card = Cards[Position - 1];
+            Cards.RemoveAt(Position-1);
+            Position--;
+            return new List<Card>(){ card };
+        }
+
+        public void FlipTopCard() => throw new InvalidOperationException($"You cannot flip a card in the {Name}");
     }
 }

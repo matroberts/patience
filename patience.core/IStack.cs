@@ -13,6 +13,5 @@ namespace patience.core
         List<Card> Take(int n);
         void FlipTopCard();
         public List<Card> Cards { get; }
-
     }
 }
