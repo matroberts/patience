@@ -46,7 +46,7 @@ namespace patience.core
         {
             var card = Card.Create(apiOperation).card.Value;
 
-            var (from, flipTopCard) = layout.IsAvailable(card);
+            var (from, n, flipTopCard) = layout.IsAvailable(card);
             if (from == null)
                 return (null, $"'{card}' is not available to be moved.");
 
@@ -67,7 +67,7 @@ namespace patience.core
                 return (null, errorMessage);
             var card = cardNullable.Value;
 
-            var (from, flipTopCard) = layout.IsAvailable(card);
+            var (from, n, flipTopCard) = layout.IsAvailable(card);
             if(from==null)
                 return (null, $"'{card}' is not available to be moved.");
 

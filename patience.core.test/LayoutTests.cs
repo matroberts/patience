@@ -666,10 +666,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("4D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("4D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("Stock"));
+            Assert.That(n, Is.EqualTo(1));
             Assert.That(flipTopCard, Is.False);
         }
 
@@ -687,10 +688,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("4D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("4D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(n, Is.EqualTo(0));
             Assert.That(flipTopCard, Is.False);
         }
 
@@ -707,10 +709,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("3D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("DiamondsStack"));
+            Assert.That(n, Is.EqualTo(1));
             Assert.That(flipTopCard, Is.False);
         }
 
@@ -727,10 +730,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("3D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(n, Is.EqualTo(0));
             Assert.That(flipTopCard, Is.False);
         }
 
@@ -747,10 +751,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("3D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("T3Stack"));
+            Assert.That(n, Is.EqualTo(1));
             Assert.That(flipTopCard, Is.False);
         }
 
@@ -767,10 +772,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("3D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("3D");
 
             // Assert
             Assert.That(stack, Is.EqualTo("T3Stack"));
+            Assert.That(n, Is.EqualTo(1));
             Assert.That(flipTopCard, Is.True);
         }
 
@@ -787,10 +793,11 @@ namespace patience.core.test
             };
 
             // Act
-            var (stack, flipTopCard) = layout.IsAvailable("2D");
+            var (stack, n, flipTopCard) = layout.IsAvailable("2D");
 
             // Assert
             Assert.That(stack, Is.Null);
+            Assert.That(n, Is.EqualTo(0));
             Assert.That(flipTopCard, Is.False);
         }
 

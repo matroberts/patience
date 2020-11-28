@@ -38,11 +38,11 @@ namespace patience.core
                 throw new InvalidOperationException($"Invariant Violation - {Name} flipped card position is less than zero.");
         }
 
-        public (string stack, bool flipTopCard) IsAvailable(Card card)
+        public (string stack, int n, bool flipTopCard) IsAvailable(Card card)
         {
             if(Cards.Count == 0)
-                return (null, false);
-            return (Cards.Last() == card ? Name : null, Cards.Count == FlippedAt);
+                return (null, 0, false);
+            return (Cards.Last() == card ? Name : null, 1, Cards.Count == FlippedAt);
         }
 
         public bool CanAccept(Card card)

@@ -7,7 +7,7 @@ namespace patience.core
     {
         public string Name { get; }
         void AssertInvariants();
-        public (string stack, bool flipTopCard) IsAvailable(Card card);
+        public (string stack, int n, bool flipTopCard) IsAvailable(Card card);
         public bool CanAccept(Card card);
         void Give(List<Card> cards);
         List<Card> Take(int n);
