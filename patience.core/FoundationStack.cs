@@ -31,14 +31,16 @@ namespace patience.core
             return (Cards.Last() == card ? Name : null, false);
         }
 
-        public Card Take()
+        public List<Card> Take(int n)
         {
+            // TODO n<>1
+
             if (Cards.Count == 0)
                 throw new ArgumentException($"The {Name} has no card to take.");
 
             var card = Cards[^1];
             Cards.RemoveAt(Cards.Count-1);
-            return card;
+            return new List<Card>(){ card };
         }
 
         public bool CanAccept(Card card)
@@ -48,9 +50,10 @@ namespace patience.core
             return Cards.Count + 1 == card.Rank;
         }
 
-        public void Give(Card card)
+        public void Give(List<Card> cards)
         {
-            Cards.Add(card);
+            // TODO n<>1
+            Cards.Add(cards.First());
             AssertInvariants();
         }
 

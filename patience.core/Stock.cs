@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace patience.core
 {
@@ -51,22 +52,24 @@ namespace patience.core
             return (Cards[Position - 1] == card ? Name : null, false);
         }
 
-        public Card Take()
+        public List<Card> Take(int n)
         {
+            // TODO n<>1
             if(Position <= 0)
                 throw new ArgumentException("The stock has no card to take.");
 
             var card = Cards[Position - 1];
             Cards.RemoveAt(Position-1);
             Position--;
-            return card;
+            return new List<Card>(){ card };
         }
 
         public bool CanAccept(Card card) => false;
 
-        public void Give(Card card)
+        public void Give(List<Card> cards)
         {
-            Cards.Insert(Position, card);
+            // TODO n<>1
+            Cards.Insert(Position, cards.First());
             Position++;
         }
 

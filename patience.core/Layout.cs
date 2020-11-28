@@ -50,8 +50,8 @@ namespace patience.core
             if (toStack == null)
                 throw new ArgumentException($"To stack '{to}' does not exist.");
 
-            var card = fromStack.Take();
-            toStack.Give(card);
+            var cards = fromStack.Take(1);
+            toStack.Give(cards);
         }
 
         public (string stack, bool flipTopCard) IsAvailable(Card card) => Stacks.Select(s => s.IsAvailable(card)).FirstOrDefault(t => t.stack != null);

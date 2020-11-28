@@ -6,12 +6,12 @@ namespace patience.core
     public interface IStack
     {
         public string Name { get; }
-        public (string stack, bool flipTopCard) IsAvailable(Card card);
-        Card Take();
-        public bool CanAccept(Card card);
-        void Give(Card card);
-        void FlipTopCard();
         void AssertInvariants();
+        public (string stack, bool flipTopCard) IsAvailable(Card card);
+        public bool CanAccept(Card card);
+        void Give(List<Card> cards);
+        List<Card> Take(int n);
+        void FlipTopCard();
         public List<Card> Cards { get; }
 
     }
